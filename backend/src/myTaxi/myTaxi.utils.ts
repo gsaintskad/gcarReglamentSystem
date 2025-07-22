@@ -1,0 +1,24 @@
+import * as fs from "fs";
+import { pool } from "./pool.js";
+import { join } from "path";
+import { getCarsJson } from "./myTaxi.types.js";
+
+export const getAllCars = async (): Promise<{ rows: getCarsJson[] }> => {
+  const sqlFilePath = join(
+    process.cwd(),
+    "src",
+    "myTaxi",
+    "sql",
+    "getCars.sql"
+  );
+
+  // If, for some reason, your 'sql' folder is directly under 'backend' (not in 'src'):
+  // const sqlFilePath = join(process.cwd(), 'sql', 'getCars.sql');
+  // But the error `src/sql/getCars.sql` indicates it's likely under 'src'.
+
+  const sql = fs.readFileSync(sqlFilePath).toString();
+  const result: { rows: getCarsJson[]; rowCount: number | null } =
+    await pool.query(sql);
+  const { rows, rowCount } = result;
+  return { rows };
+};

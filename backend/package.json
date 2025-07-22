@@ -4,19 +4,23 @@
   "description": "",
   "license": "ISC",
   "author": "gsaintskad",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --no-warnings --loader ts-node/esm main.ts",
+    "dev": "nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\""
   },
   "dependencies": {
+    "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "pg": "^8.16.3",
     "ssh2": "^1.16.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
     "@types/nodemon": "^1.19.6",
+    "@types/pg": "^8.15.4",
     "@types/ssh2": "^1.15.5",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
