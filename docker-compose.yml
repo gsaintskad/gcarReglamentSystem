@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Your Node.js application service
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile # If you containerize your Node.js app
+  #   ports:
+  #     - "${PORT}:${PORT}"
+  #   depends_on:
+  #     postgres_gcar_db:
+  #       condition: service_healthy # Ensure only GCAR DB is ready
+  #   env_file:
+  #     - ./.env # Load environment variables from your .env file
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   command: ["npm", "run", "dev"] # Or "npm", "start" for production
+
+  # # GCAR Database Service (your local database)
+  postgres_gcar_db:
+    image: postgres:16
+    container_name: gcar_db_container
+    environment:
+      POSTGRES_USER: ${GCAR_PG_USER}
+      POSTGRES_PASSWORD: ${GCAR_PG_PASSWORD}
+      POSTGRES_DB: ${GCAR_PG_DB}
+    ports:
+      - "5433:5432" # Host:Container port mapping (your app connects to localhost:5433 for GCAR DB)
+    volumes:
+      - gcar_db_data:/var/lib/postgresql/data # Persistent data volume
+    healthcheck: # Health check for GCAR DB
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  gcar_db_data: 

@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { pool } from "./pool.js";
+import { myTaxiPool } from "./myTaxi.pool.js";
 import { join } from "path";
 import { getCarsJson } from "./myTaxi.types.js";
 
@@ -18,7 +18,7 @@ export const getAllCars = async (): Promise<{ rows: getCarsJson[] }> => {
 
   const sql = fs.readFileSync(sqlFilePath).toString();
   const result: { rows: getCarsJson[]; rowCount: number | null } =
-    await pool.query(sql);
+    await myTaxiPool.query(sql);
   const { rows, rowCount } = result;
   return { rows };
 };

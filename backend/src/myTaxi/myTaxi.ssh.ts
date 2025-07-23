@@ -12,7 +12,7 @@ interface SshConfig {
   passphrase?: string;
 }
 
-export const openSShTunnel = new Promise<string>((resolve, reject) => {
+export const openMyTaxiSShTunnel = new Promise<string>((resolve, reject) => {
   console.log("Opening SSH tunnel...");
   const c = new Client();
 
@@ -23,9 +23,9 @@ export const openSShTunnel = new Promise<string>((resolve, reject) => {
       return sock.destroy();
     }
 
-    const pgHost = process.env.PG_HOST;
-    const pgPort = process.env.PG_PORT
-      ? parseInt(process.env.PG_PORT, 10)
+    const pgHost = process.env.MY_TAXI_PG_HOST;
+    const pgPort = process.env.MY_TAXI_PG_PORT
+      ? parseInt(process.env.MY_TAXI_PG_PORT, 10)
       : undefined;
 
     if (!pgHost || pgPort === undefined) {
@@ -49,10 +49,10 @@ export const openSShTunnel = new Promise<string>((resolve, reject) => {
     );
   });
 
-  const proxyPort = process.env.PROXY_PORT
-    ? parseInt(process.env.PROXY_PORT, 10)
+  const proxyPort = process.env.MY_TAXI_PROXY_PORT
+    ? parseInt(process.env.MY_TAXI_PROXY_PORT, 10)
     : undefined;
-  const proxyHost = process.env.PROXY_HOST;
+  const proxyHost = process.env.MY_TAXI_PROXY_HOST;
 
   if (!proxyPort || !proxyHost) {
     console.error("Missing PROXY_PORT or PROXY_HOST environment variables.");
@@ -65,7 +65,7 @@ export const openSShTunnel = new Promise<string>((resolve, reject) => {
     console.log(`Proxy listening on ${proxyHost}:${proxyPort}`);
   });
 
-  const privateKeyPath = process.env.SSH_PRIVATE_KEY_PATH;
+  const privateKeyPath = process.env.MY_TAXI_SSH_PRIVATE_KEY_PATH;
   if (!privateKeyPath) {
     console.error("Missing SSH_PRIVATE_KEY_PATH environment variable.");
     return reject(
@@ -75,8 +75,8 @@ export const openSShTunnel = new Promise<string>((resolve, reject) => {
 
   const privateKey: Buffer = fs.readFileSync(privateKeyPath);
 
-  const sshHost = process.env.SSH_HOST;
-  const sshUser = process.env.SSH_USER;
+  const sshHost = process.env.MY_TAXI_SSH_HOST;
+  const sshUser = process.env.MY_TAXI_SSH_USER;
 
   if (!sshHost || !sshUser) {
     console.error("Missing SSH_HOST or SSH_USER environment variables.");
@@ -92,8 +92,8 @@ export const openSShTunnel = new Promise<string>((resolve, reject) => {
     privateKey,
   };
 
-  if (process.env.SSH_PASSPHRASE) {
-    sshConfig.passphrase = process.env.SSH_PASSPHRASE;
+  if (process.env.MY_TAXI_SSH_PASSPHRASE) {
+    sshConfig.passphrase = process.env.MY_TAXI_SSH_PASSPHRASE;
   }
 
   c.connect(sshConfig);
