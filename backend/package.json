@@ -7,8 +7,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node --no-warnings --loader ts-node/esm main.ts",
-    "dev": "nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\""
+    "start:prod": "ENV=PROD node --no-warnings --loader ts-node/esm main.ts",
+    "start:dev": "ENV=DEV node --no-warnings --loader ts-node/esm main.ts",
+    "dev": "ENV=DEV nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\""
   },
   "dependencies": {
     "dotenv": "^17.2.0",

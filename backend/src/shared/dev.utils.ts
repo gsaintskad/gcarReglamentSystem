@@ -1,3 +1,5 @@
 export const devLog = (...args: any[]) => {
-  console.log(...args);
+  if (process.env.ENV === "DEV") {
+    console.log(...args);
+  }
 };
