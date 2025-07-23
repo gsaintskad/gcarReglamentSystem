@@ -23,50 +23,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import { getCarsJson } from "@/myTaxi.types";
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+import { useCallback } from "react";
+import api from "@/api/reglamentSystem.api";
+import { carReglamentDto } from "@/reglament.types";
 export interface DialogTableRowProps {
   car: getCarsJson;
 }
@@ -74,12 +33,18 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
   props: DialogTableRowProps
 ) => {
   const { car }: { car: getCarsJson } = props;
-
+  const getReglaments = useCallback<() => Promise<getCarsJson>>(async () => {
+    const carReglaments: carReglamentDto[] = await api.get(
+      `/reglamnets/cars?car_id=${car.car_id}`
+    );
+    console.log(carReglaments);
+    return car as getCarsJson;
+  }, []);
   const { license_plate, model, color, city } = car;
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <TableRow>
+        <TableRow onClick={() => getReglaments()}>
           <TableCell className="font-medium">{license_plate}</TableCell>
           <TableCell>
             {model} {color}
@@ -95,6 +60,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             {license_plate}
           </DialogDescription>
         </DialogHeader>
+        <Button className="w-1/4 justify-self-end">NEW Reglament</Button>
         <Table className="h-16">
           <TableHeader>
             <TableRow>
@@ -107,9 +73,9 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             </TableRow>
           </TableHeader>
           <TableBody className="h-16">
-            {invoices.map((invoice) => (
+            {/* {invoices.map((invoice) => (
               <ReglamentEditingDialog key={invoice.invoice} />
-            ))}
+            ))} */}
           </TableBody>
         </Table>
         <DialogFooter>

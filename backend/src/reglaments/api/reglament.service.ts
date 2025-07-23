@@ -12,8 +12,12 @@ export const getReglamentTypesHandler = async () => {
   return { reglamentTypes };
 };
 export const assignReglamentToCarHandler = async (
-  dto: reglamentTypes.assignReglamentToCarDto
+  dto: reglamentTypes.carReglamentDto
 ) => {
-    await reglamentRepo.assignReglamentToCar(dto);
-    return true;
+  await reglamentRepo.assignReglamentToCar(dto);
+  return true;
+};
+export const getCarReglamentsHandler = async (car_id: string) => {
+  const carReglaments = await reglamentRepo.getCarReglaments(car_id);
+  return { carReglaments };
 };

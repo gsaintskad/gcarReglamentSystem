@@ -2,21 +2,21 @@ version: "3.8"
 
 services:
   # Your Node.js application service
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile # If you containerize your Node.js app
-    ports:
-      - "${PORT}:${PORT}"
-    depends_on:
-      postgres_gcar_db:
-        condition: service_healthy # Ensure only GCAR DB is ready
-    env_file:
-      - ./.env # Load environment variables from your .env file
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: ["npm", "run", "dev"] # Or "npm", "start" for production
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile # If you containerize your Node.js app
+  #   ports:
+  #     - "${PORT}:${PORT}"
+  #   depends_on:
+  #     postgres_gcar_db:
+  #       condition: service_healthy # Ensure only GCAR DB is ready
+  #   env_file:
+  #     - ./.env # Load environment variables from your .env file
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   command: ["npm", "run", "dev"] # Or "npm", "start" for production
 
   # # GCAR Database Service (your local database)
 

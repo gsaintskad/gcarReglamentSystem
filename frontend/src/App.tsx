@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     console.log("fetching...");
     async function fetchCars() {
-      const response = await api.get("/cars");
+      const response = await api.get("/myTaxi/cars");
       const { data } = response;
       const { cars } = data;
       console.log(cars);

@@ -29,15 +29,28 @@ export const getReglamentTypesEndpoint = async (
     res.status(500).json({ message: "An unexpected error occurred" });
   }
 };
-export const assignReglamentToCarEndpoint = async (
+export const createCarReglamentEndpoint = async (
   req: Request,
   res: Response
 ) => {
   try {
     devLog("assigning reglament to car...");
-    const { body: dto }: { body: reglamentTypes.assignReglamentToCarDto } = req;
+    const { body: dto }: { body: reglamentTypes.carReglamentDto } = req;
     await reglamentService.assignReglamentToCarHandler(dto);
     res.status(204).json({ data: { message: "success" } });
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    res.status(500).json({ message: "An unexpected error occurred" });
+  }
+};
+export const getCarReglamentsEndpoint = async (req: Request, res: Response) => {
+  try {
+    devLog("getting car reglaments...");
+    const { car_id } = req.query as { car_id: string };
+    const { carReglaments } = await reglamentService.getCarReglamentsHandler(
+      car_id
+    );
+    res.status(200).json({ carReglaments });
   } catch (error) {
     console.error("Unexpected error:", error);
     res.status(500).json({ message: "An unexpected error occurred" });
