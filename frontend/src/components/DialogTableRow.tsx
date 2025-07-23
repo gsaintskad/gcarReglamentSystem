@@ -69,7 +69,6 @@ const invoices = [
 ];
 export interface DialogTableRowProps {
   car: getCarsJson;
-
 }
 const DialogTableRow: React.FC<DialogTableRowProps> = (
   props: DialogTableRowProps
@@ -80,7 +79,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <TableRow >
+        <TableRow>
           <TableCell className="font-medium">{license_plate}</TableCell>
           <TableCell>
             {model} {color}
@@ -109,7 +108,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
           </TableHeader>
           <TableBody className="h-16">
             {invoices.map((invoice) => (
-              <ReglamentEditingDialog />
+              <ReglamentEditingDialog key={invoice.invoice} />
             ))}
           </TableBody>
         </Table>
