@@ -1,4 +1,4 @@
-select c.license_plate, c.color , cm.model  ,ap."name" as city 
+select c.license_plate,c.id as car_id, c.color , cm.model  as city  ,ap."name",ap.id as auto_park_id, as city,c.odometer as mileage
 from cars c 
 	join car_models cm on cm.id=c.model_id 
 	join cars_to_auto_parks ctap on ctap.car_id =c.id 

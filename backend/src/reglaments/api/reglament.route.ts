@@ -4,6 +4,7 @@ import * as reglamentController from './reglament.controller.js'; // Note the .j
 
 const reglamentRouter = Router();
 
-reglamentRouter.post('/add-type', reglamentController.addReglamentTypeEndpoint);
-
+reglamentRouter.post('/types', reglamentController.addReglamentTypeEndpoint);
+reglamentRouter.get('/types', reglamentController.getReglamentTypesEndpoint);
+reglamentRouter.post('/cars', reglamentController.assignReglamentToCarEndpoint);
 export default reglamentRouter;

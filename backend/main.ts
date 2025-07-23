@@ -6,6 +6,6 @@ import { devLog } from "./src/shared/dev.utils.js";
 await openMyTaxiSShTunnel;
 
 startServer();
-const a = await testCallReglamentPool();
-console.log(a);
+// const a = await testCallReglamentPool();
+// console.log(a);
 devLog("application running...");
