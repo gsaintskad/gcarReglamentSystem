@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import * as myTaxiService from "./myTaxi.service.js"; // Note the .js extension
 import { devLog } from "../../shared/dev.utils.js";
 
-export const getCars = async (req: Request, res: Response) => {
+export const getCarsEndpoint = async (req: Request, res: Response) => {
   try {
     devLog("Getting cars...");
     const cars = await myTaxiService.getCars();

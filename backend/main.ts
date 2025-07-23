@@ -1,6 +1,6 @@
 import { startServer } from "./src/api/api.js";
 import { openMyTaxiSShTunnel } from "./src/myTaxi/myTaxi.ssh.js";
-import { testCallReglamentPool } from "./src/reglaments/reglament.utils.js";
+import { testCallReglamentPool } from "./src/reglaments/reglament.queries.js";
 import { devLog } from "./src/shared/dev.utils.js";
 
 await openMyTaxiSShTunnel;
