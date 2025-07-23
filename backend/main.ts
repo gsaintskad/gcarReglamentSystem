@@ -3,5 +3,5 @@ import { getAllCars } from "./src/myTaxi/myTaxi.utils.js";
 import { openMyTaxiSShTunnel } from "./src/myTaxi/myTaxi.ssh.js";
 
 await openMyTaxiSShTunnel;
-console.log(await getAllCars())
+
 startServer();
