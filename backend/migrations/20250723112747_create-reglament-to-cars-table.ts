@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     table.uuid('auto_park_id').notNullable();
     table.integer('mileage_deadline').notNullable();
     table.integer('remember_after_mileage_past').notNullable();
-    table.foreign('reglament_type_id').references('id').inTable('reglament_types').onDelete('CASCADE');
+    table.foreign('reglament_type_id').references('id').inTable('reglament_types');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
