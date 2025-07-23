@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
+import { getCarsJson } from "@/myTaxi.types";
 const invoices = [
   {
     invoice: "INV001",
@@ -66,22 +67,33 @@ const invoices = [
     paymentMethod: "Credit Card",
   },
 ];
-export interface DialogTableRowProps {}
-const DialogTableRow: React.FC<{}> = (props) => {
+export interface DialogTableRowProps {
+  car: getCarsJson;
+
+}
+const DialogTableRow: React.FC<DialogTableRowProps> = (
+  props: DialogTableRowProps
+) => {
+  const { car }: { car: getCarsJson } = props;
+
+  const { license_plate, model, color, city } = car;
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <TableRow>
-          <TableCell className="font-medium">AA1234AA</TableCell>
-          <TableCell>Audi a4 white</TableCell>
-          <TableCell>Київ</TableCell>
+        <TableRow >
+          <TableCell className="font-medium">{license_plate}</TableCell>
+          <TableCell>
+            {model} {color}
+          </TableCell>
+          <TableCell>{city}</TableCell>
         </TableRow>
       </DialogTrigger>
       <DialogContent className="h-5/6">
         <DialogHeader>
-          <DialogTitle>Регламенти авто AA1234AA</DialogTitle>
+          <DialogTitle>Регламенти авто {license_plate}</DialogTitle>
           <DialogDescription>
-            Тут можна переглянути та внести зміни до регламентів авто AA1234AA
+            Тут можна переглянути та внести зміни до регламентів авто{" "}
+            {license_plate}
           </DialogDescription>
         </DialogHeader>
         <Table className="h-16">
