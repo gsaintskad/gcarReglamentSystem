@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Your Node.js application service
@@ -19,22 +19,36 @@ services:
   #   command: ["npm", "run", "dev"] # Or "npm", "start" for production
 
   # # GCAR Database Service (your local database)
+
+  # GCAR Database Service (your local database)
   postgres_gcar_db:
     image: postgres:16
     container_name: gcar_db_container
     environment:
-      POSTGRES_USER: ${GCAR_PG_USER}
-      POSTGRES_PASSWORD: ${GCAR_PG_PASSWORD}
-      POSTGRES_DB: ${GCAR_PG_DB}
+      POSTGRES_USER: gcar_user
+      POSTGRES_PASSWORD: gcar_password_strong
+      POSTGRES_DB: gcar_database
     ports:
-      - "5433:5432" # Host:Container port mapping (your app connects to localhost:5433 for GCAR DB)
+      - "5433:5432" # Host:Container port mapping
     volumes:
-      - gcar_db_data:/var/lib/postgresql/data # Persistent data volume
-    healthcheck: # Health check for GCAR DB
+      - gcar_db_data:/var/lib/postgresql/data
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 5
+  # Nginx TCP Proxy Service
+  nginx_db_proxy:
+    image: nginx:stable-alpine # A lightweight Nginx image
+    container_name: nginx_gcar_db_proxy
+    ports:
+      - "5434:5432" # Host port 5434 will proxy to container's 5432 (Nginx's listen port)
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount your Nginx config file
+    depends_on:
+      postgres_gcar_db:
+        condition: service_healthy # Ensure DB is healthy before Nginx starts proxying
+    restart: always # Always restart if it fails
 
 volumes:
-  gcar_db_data: 
+  gcar_db_data:

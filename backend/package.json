@@ -7,9 +7,17 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start:prod": "ENV=PROD node --no-warnings --loader ts-node/esm main.ts",
-    "start:dev": "ENV=DEV node --no-warnings --loader ts-node/esm main.ts",
-    "dev": "ENV=DEV nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\""
+    "start": "node --no-warnings --loader ts-node/esm main.ts",
+    "dev": "nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\"",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate:make": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:make",
+    "migrate:latest": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:latest",
+    "migrate:rollback": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:rollback",
+    "migrate:up": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:up",
+    "migrate:down": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:down",
+    "seed:make": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:make",
+    "seed:run": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:run"
   },
   "dependencies": {
     "cors": "^2.8.5",
