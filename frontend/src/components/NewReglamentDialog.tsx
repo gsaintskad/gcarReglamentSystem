@@ -74,7 +74,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-1/4">NEW Reglament</Button>
+        <Button className="w-1/2">NEW Reglament</Button>
       </DialogTrigger>
       <DialogContent className="h-3/4">
         <DialogHeader>

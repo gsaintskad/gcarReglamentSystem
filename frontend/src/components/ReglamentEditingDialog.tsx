@@ -138,6 +138,9 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             Тут можна переглянути та внести зміни до регламентів машини
           </DialogDescription>
         </DialogHeader>
+        <Button variant={"destructive"} onClick={() => updateReglament()}>
+          Delete
+        </Button>
         <div className="grid grid-cols-2 ">
           <Label>Тип регламенту</Label>
           <Select
@@ -182,6 +185,10 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           >
             <Label className="translate-y-4">{progress}%</Label>
           </div>
+        </div>
+        <div className="flex">
+          <Label>Коментар:</Label>
+          <Label>{comment}</Label>
         </div>
 
         <DialogFooter>

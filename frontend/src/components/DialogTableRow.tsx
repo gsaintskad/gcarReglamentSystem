@@ -28,6 +28,7 @@ import api from "@/api/reglamentSystem.api";
 import { carReglamentDto } from "@/types/reglament.types";
 import NewReglamentDialog from "./NewReglamentDialog";
 import { getCarReglamentByCarId } from "@/utils/reglament.utils";
+import { Link } from "lucide-react";
 export interface DialogTableRowProps {
   car: getCarsJson;
 }
@@ -64,27 +65,44 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             {license_plate}
           </DialogDescription>
         </DialogHeader>
-        <NewReglamentDialog car={car} cb={getReglaments} />
-        <Table className="h-16">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Регламент</TableHead>
-              <TableHead>Прогресс</TableHead>
-              <TableHead>Deadline</TableHead>
-              <TableHead className=" text-nowrap">Нагадати за:</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="h-16">
-            {reglaments?.map((reglament) => (
-              <ReglamentEditingDialog
-                reglament={reglament}
-                car={car}
-                cb={getReglaments}
-                key={`${reglament.id}-${reglament.car_id}`}
-              />
-            ))}
-          </TableBody>
-        </Table>
+        <div className="flex flex-col justify-between">
+          <div className="flex justify-between gap-3">
+            <Button
+              variant={"outline"}
+              className=""
+              onClick={() =>
+                window.open(
+                  `https://fleets.mytaxicrm.com/company-cars/${car.car_id}`,
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
+            >
+              myTaxi
+            </Button>
+            <NewReglamentDialog car={car} cb={getReglaments} />
+          </div>
+          <Table className="h-16">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Регламент</TableHead>
+                <TableHead>Прогресс</TableHead>
+                <TableHead>Deadline</TableHead>
+                <TableHead className=" text-nowrap">Нагадати за:</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {reglaments?.map((reglament) => (
+                <ReglamentEditingDialog
+                  reglament={reglament}
+                  car={car}
+                  cb={getReglaments}
+                  key={`${reglament.id}-${reglament.car_id}`}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button type="submit">Save changes</Button>
