@@ -40,6 +40,7 @@ import { bg } from "date-fns/locale";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
   car: getCarsJson;
+  cb: () => Promise<any>;
 }
 const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   props: ReglamentEditingDialogProps
@@ -84,7 +85,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     const progress = Math.floor(
       ((actual_mileage + 5 - reglament.mileage_stamp) /
         reglament.mileage_deadline) *
-        100 
+        100
     );
     let progress_color;
     let bg_color;
@@ -185,9 +186,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button type="submit">Save changes</Button>
           </DialogClose>
-          <Button type="submit">Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -30,9 +30,11 @@ import { Slider } from "@radix-ui/react-slider";
 import { getCarsJson } from "@/types/myTaxi.types";
 interface NewReglamentDialogProps {
   car: getCarsJson;
+  cb: () => Promise<any>;
 }
 export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   car,
+  cb,
 }: NewReglamentDialogProps) => {
   const { car_id, auto_park_id, mileage: mileage_stamp } = car;
   const [reglament_type_id, setReglament_type_id] = useState<number>();
@@ -55,6 +57,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
       comment,
     };
     const response = await api.post("/reglaments/cars", body);
+    cb();
     return;
   }, [
     reglament_type_id,
@@ -124,11 +127,10 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button type="submit" onClick={() => createReglament()}>
+              Create reglament
+            </Button>
           </DialogClose>
-          <Button type="submit" onClick={() => createReglament()}>
-            Create reglament
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

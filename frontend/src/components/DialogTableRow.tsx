@@ -64,7 +64,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             {license_plate}
           </DialogDescription>
         </DialogHeader>
-        <NewReglamentDialog car={car} />
+        <NewReglamentDialog car={car} cb={getReglaments} />
         <Table className="h-16">
           <TableHeader>
             <TableRow>
@@ -79,6 +79,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
               <ReglamentEditingDialog
                 reglament={reglament}
                 car={car}
+                cb={getReglaments}
                 key={`${reglament.id}-${reglament.car_id}`}
               />
             ))}
@@ -86,9 +87,8 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
         </Table>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button type="submit">Save changes</Button>
           </DialogClose>
-          <Button type="submit">Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
