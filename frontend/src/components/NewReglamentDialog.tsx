@@ -84,7 +84,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           <Label>Тип регламенту</Label>
           <Select onValueChange={(val: number) => setReglament_type_id(val)}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Theme" />
+              <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
               {types!.map((type) => {

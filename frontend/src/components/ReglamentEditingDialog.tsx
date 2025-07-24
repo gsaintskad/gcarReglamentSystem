@@ -34,6 +34,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     mileage_before_deadline_to_remember,
     mileage_deadline,
     reglament_type_id,
+    reglament_name,
     mileage_stamp,
   } = reglament;
   const progress = Math.floor(
@@ -44,7 +45,9 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     <Dialog>
       <DialogTrigger asChild>
         <TableRow>
-          <TableCell className="font-medium">{reglament_type_id}</TableCell>
+          <TableCell className="font-medium">
+            {reglament_name ?? "CTO"}
+          </TableCell>
           <TableCell>{progress}%</TableCell>
           <TableCell>{mileage_deadline}</TableCell>
           <TableCell>{mileage_before_deadline_to_remember}</TableCell>
@@ -58,8 +61,17 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 ">
-          <Label>Тип регламенту</Label>
-          <Input></Input>
+                    <Label>Тип регламенту</Label>
+          <Select onValueChange={(val: number) => setReglament_type_id(val)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              {types!.map((type) => {
+                return <SelectItem value={type.id}>{type.name}</SelectItem>;
+              })}
+            </SelectContent>
+          </Select>
 
           <Label>Маркер</Label>
           <Input></Input>
