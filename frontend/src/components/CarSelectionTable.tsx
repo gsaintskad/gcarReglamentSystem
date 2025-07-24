@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getCarsJson } from "@/myTaxi.types";
+import { getCarsJson } from "@/types/myTaxi.types";
 interface CarSelectionTableProps {
   cars: getCarsJson[];
 }

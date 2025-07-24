@@ -13,3 +13,8 @@ export interface carReglamentDto {
   comment: string;
   mileage_stamp: number;
 }
+export interface reglamentType {
+  id: number;
+  name: string;
+  description: string;
+}

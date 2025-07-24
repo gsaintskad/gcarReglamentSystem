@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import * as reglamentTypes from "../reglament.types";
+import * as reglamentTypes from "../types/reglament.types";
 import api from "@/api/reglamentSystem.api";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Value } from "@radix-ui/react-select";
+import { getReglamentTypes } from "@/utils/reglament.utils";
 interface NewReglamentDialogProps {
   car_id: string;
 }
@@ -52,6 +53,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = (
       props,
     ]
   );
+ 
   return (
     <Dialog>
       <DialogTrigger asChild>

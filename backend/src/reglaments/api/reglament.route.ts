@@ -7,6 +7,5 @@ const reglamentRouter = Router();
 reglamentRouter.post("/types", reglamentController.addReglamentTypeEndpoint);
 reglamentRouter.get("/types", reglamentController.getReglamentTypesEndpoint);
 reglamentRouter.post("/cars", reglamentController.createCarReglamentEndpoint);
-
 reglamentRouter.get("/cars", reglamentController.getCarReglamentsEndpoint);
 export default reglamentRouter;
