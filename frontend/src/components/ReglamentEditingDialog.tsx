@@ -35,6 +35,8 @@ import useMainContext from "@/contexts/MainContext";
 import { useCallback, useMemo, useState } from "react";
 import { getCarsJson } from "@/types/myTaxi.types";
 import api from "@/api/reglamentSystem.api";
+import { reglamentStateBgColors, reglamentStateColors } from "./constants";
+import { bg } from "date-fns/locale";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
   car: getCarsJson;
@@ -78,11 +80,31 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     auto_park_id,
   ]);
 
-  const progress = Math.floor(
-    ((actual_mileage + 5 - reglament.mileage_stamp) /
-      reglament.mileage_deadline) *
-      100
-  );
+  const { progress, progress_color, bg_color } = useMemo(() => {
+    const progress = Math.floor(
+      ((actual_mileage + 5 - reglament.mileage_stamp) /
+        reglament.mileage_deadline) *
+        100 
+    );
+    let progress_color;
+    let bg_color;
+    if (progress >= 100) {
+      progress_color = reglamentStateColors.expired;
+      bg_color = reglamentStateBgColors.expired;
+    } else if (progress >= 50) {
+      progress_color = reglamentStateColors.soon;
+      bg_color = reglamentStateBgColors.soon;
+    } else {
+      bg_color = reglamentStateBgColors.new;
+      progress_color = reglamentStateColors.new;
+    }
+
+    return {
+      progress,
+      progress_color,
+      bg_color,
+    };
+  }, [reglament, actual_mileage]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
   const { reglament_type_name, reglament_type_description } = useMemo<{
@@ -95,10 +117,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       reglament_type_description: type!.description,
     };
   }, [reglament_type_id, types]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <TableRow>
+        <TableRow className=" rounded-lg" style={{ backgroundColor: bg_color }}>
           <TableCell className="font-medium">{reglament_type_name}</TableCell>
           <TableCell>{progress}%</TableCell>
           <TableCell>{mileage_deadline}</TableCell>
@@ -150,8 +173,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
         </div>
         <div className="flex bg-gray-300 rounded-full justify-start w-full h-3">
           <div
-            className={`h-full bg-green-500 rounded-full flex justify-end`}
-            style={{ width: `${progress}%` }}
+            className={`h-full rounded-full flex justify-end`}
+            style={{
+              width: `${progress}%`,
+              backgroundColor: progress_color,
+            }}
           >
             <Label className="translate-y-4">{progress}%</Label>
           </div>
