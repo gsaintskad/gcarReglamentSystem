@@ -21,11 +21,34 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-const ReglamentEditingDialog: React.FC<{}> = (props) => {
+import { carReglamentDto } from "@/types/reglament.types";
+interface ReglamentEditingDialogProps {
+  reglament: carReglamentDto;
+}
+const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
+  props: ReglamentEditingDialogProps
+) => {
+  const { reglament } = props;
+  const {
+    id,
+    mileage_before_deadline_to_remember,
+    mileage_deadline,
+    reglament_type_id,
+    mileage_stamp,
+  } = reglament;
+  const progress = Math.floor(
+    ((mileage_stamp + 5 - mileage_stamp) / mileage_deadline) * 100
+  );
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-         <Button>NEW Reglament</Button>
+        <TableRow>
+          <TableCell className="font-medium">{reglament_type_id}</TableCell>
+          <TableCell>{progress}%</TableCell>
+          <TableCell>{mileage_deadline}</TableCell>
+          <TableCell>{mileage_before_deadline_to_remember}</TableCell>
+        </TableRow>
       </DialogTrigger>
       <DialogContent className="h-3/4">
         <DialogHeader>

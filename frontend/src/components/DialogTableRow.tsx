@@ -23,22 +23,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import { getCarsJson } from "@/types/myTaxi.types";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import api from "@/api/reglamentSystem.api";
 import { carReglamentDto } from "@/types/reglament.types";
 import NewReglamentDialog from "./NewReglamentDialog";
+import { getCarReglamentByCarId } from "@/utils/reglament.utils";
 export interface DialogTableRowProps {
   car: getCarsJson;
 }
 const DialogTableRow: React.FC<DialogTableRowProps> = (
   props: DialogTableRowProps
 ) => {
+  const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
   const { car }: { car: getCarsJson } = props;
   const getReglaments = useCallback<() => Promise<getCarsJson>>(async () => {
-    const carReglaments: carReglamentDto[] = await api.get(
-      `/reglaments/cars?car_id=${car.car_id}`
+    const carReglaments: carReglamentDto[] = await getCarReglamentByCarId(
+      car.car_id
     );
     console.log(carReglaments);
+    setReglaments(carReglaments);
     return car as getCarsJson;
   }, [car]);
   const { license_plate, model, color, city } = car;
@@ -67,16 +70,17 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             <TableRow>
               <TableHead className="w-[100px]">Регламент</TableHead>
               <TableHead>Прогресс</TableHead>
-              <TableHead>Ціль</TableHead>
-              <TableHead className="text-right text-nowrap">
-                Нагадати за:
-              </TableHead>
+              <TableHead>Deadline</TableHead>
+              <TableHead className=" text-nowrap">Нагадати за:</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="h-16">
-            {/* {invoices.map((invoice) => (
-              <ReglamentEditingDialog key={invoice.invoice} />
-            ))} */}
+            {reglaments?.map((reglament) => (
+              <ReglamentEditingDialog
+                reglament={reglament}
+                key={`${reglament.id}-${reglament.car_id}`}
+              />
+            ))}
           </TableBody>
         </Table>
         <DialogFooter>
