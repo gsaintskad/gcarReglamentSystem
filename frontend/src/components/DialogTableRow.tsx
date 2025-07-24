@@ -26,6 +26,7 @@ import { getCarsJson } from "@/myTaxi.types";
 import { useCallback } from "react";
 import api from "@/api/reglamentSystem.api";
 import { carReglamentDto } from "@/reglament.types";
+import NewReglamentDialog from "./NewReglamentDialog";
 export interface DialogTableRowProps {
   car: getCarsJson;
 }
@@ -39,7 +40,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
     );
     console.log(carReglaments);
     return car as getCarsJson;
-  }, []);
+  }, [car]);
   const { license_plate, model, color, city } = car;
   return (
     <Dialog>
@@ -60,7 +61,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             {license_plate}
           </DialogDescription>
         </DialogHeader>
-        <Button className="w-1/4 justify-self-end">NEW Reglament</Button>
+        <NewReglamentDialog car_id={car.car_id} />
         <Table className="h-16">
           <TableHeader>
             <TableRow>

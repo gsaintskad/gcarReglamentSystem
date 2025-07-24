@@ -25,12 +25,7 @@ const ReglamentEditingDialog: React.FC<{}> = (props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <TableRow>
-          <TableCell className="font-medium">Заміна масла</TableCell>
-          <TableCell>59%</TableCell>
-          <TableCell>15000 км</TableCell>
-          <TableCell>500 км</TableCell>
-        </TableRow>
+         <Button>NEW Reglament</Button>
       </DialogTrigger>
       <DialogContent className="h-3/4">
         <DialogHeader>
