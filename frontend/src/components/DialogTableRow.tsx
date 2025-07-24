@@ -78,6 +78,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             {reglaments?.map((reglament) => (
               <ReglamentEditingDialog
                 reglament={reglament}
+                car={car}
                 key={`${reglament.id}-${reglament.car_id}`}
               />
             ))}

@@ -19,35 +19,87 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { carReglamentDto } from "@/types/reglament.types";
+import useMainContext from "@/contexts/MainContext";
+import { useCallback, useMemo, useState } from "react";
+import { getCarsJson } from "@/types/myTaxi.types";
+import api from "@/api/reglamentSystem.api";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
+  car: getCarsJson;
 }
 const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   props: ReglamentEditingDialogProps
 ) => {
-  const { reglament } = props;
-  const {
-    id,
-    mileage_before_deadline_to_remember,
-    mileage_deadline,
-    reglament_type_id,
-    reglament_name,
-    mileage_stamp,
-  } = reglament;
-  const progress = Math.floor(
-    ((mileage_stamp + 5 - mileage_stamp) / mileage_deadline) * 100
+  const { reglament, car } = props;
+  const { car_id, auto_park_id, mileage: actual_mileage } = car;
+  const [reglament_type_id, setReglament_type_id] = useState<number>(
+    Number(reglament.reglament_type_id)
   );
+  const [mileage_deadline, setMileage_deadline] = useState<number>(
+    reglament.mileage_deadline
+  );
+  const [
+    mileage_before_deadline_to_remember,
+    setMileage_before_deadline_to_remember,
+  ] = useState<number>(reglament.mileage_before_deadline_to_remember);
+  const [comment, setComment] = useState<string>(reglament.comment);
 
+  const updateReglament = useCallback(async () => {
+    const body = {
+      reglament_type_id,
+      car_id,
+      auto_park_id,
+      mileage_deadline,
+      mileage_before_deadline_to_remember,
+      mileage_stamp: reglament.mileage_stamp,
+      telegram_id: 12345,
+      comment,
+    };
+    const response = await api.put("/reglaments/cars", body);
+    return;
+  }, [
+    reglament_type_id,
+    mileage_deadline,
+    mileage_before_deadline_to_remember,
+    comment,
+    car_id,
+    auto_park_id,
+  ]);
+
+  const progress = Math.floor(
+    ((actual_mileage + 5 - reglament.mileage_stamp) /
+      reglament.mileage_deadline) *
+      100
+  );
+  const { globalState } = useMainContext();
+  const { reglamentTypes: types } = globalState;
+  const { reglament_type_name, reglament_type_description } = useMemo<{
+    reglament_type_name: string;
+    reglament_type_description: string;
+  }>(() => {
+    const type = types!.find((type) => type.id === reglament_type_id);
+    return {
+      reglament_type_name: type!.name,
+      reglament_type_description: type!.description,
+    };
+  }, [reglament_type_id, types]);
   return (
     <Dialog>
       <DialogTrigger asChild>
         <TableRow>
-          <TableCell className="font-medium">
-            {reglament_name ?? "CTO"}
-          </TableCell>
+          <TableCell className="font-medium">{reglament_type_name}</TableCell>
           <TableCell>{progress}%</TableCell>
           <TableCell>{mileage_deadline}</TableCell>
           <TableCell>{mileage_before_deadline_to_remember}</TableCell>
@@ -55,32 +107,54 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       </DialogTrigger>
       <DialogContent className="h-3/4">
         <DialogHeader>
-          <DialogTitle>Регламенти машини</DialogTitle>
+          <DialogTitle>
+            Регламент {reglament_type_name} машини {car.license_plate}
+          </DialogTitle>
           <DialogDescription>
             Тут можна переглянути та внести зміни до регламентів машини
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 ">
-                    <Label>Тип регламенту</Label>
-          <Select onValueChange={(val: number) => setReglament_type_id(val)}>
+          <Label>Тип регламенту</Label>
+          <Select
+            onValueChange={(val: string) => setReglament_type_id(Number(val))}
+            value={String(reglament_type_id)}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
               {types!.map((type) => {
-                return <SelectItem value={type.id}>{type.name}</SelectItem>;
+                return (
+                  <SelectItem
+                    key={`select-type-${type.id}-${car.car_id}`}
+                    value={String(type.id)}
+                  >
+                    {type.name}
+                  </SelectItem>
+                );
               })}
             </SelectContent>
           </Select>
 
-          <Label>Маркер</Label>
-          <Input></Input>
+          <Label>Опис регламенту</Label>
+          <Label>{reglament_type_description}</Label>
+          <Label>Deadline</Label>
+          <Input defaultValue={mileage_deadline}></Input>
 
           <Label>Нагадати за:</Label>
-          <Input></Input>
+          <Input defaultValue={mileage_before_deadline_to_remember}></Input>
 
           <Label>Прогресс</Label>
-          <Label>59%</Label>
+          <Label>{progress}%</Label>
+        </div>
+        <div className="flex bg-gray-300 rounded-full justify-start w-full h-3">
+          <div
+            className={`h-full bg-green-500 rounded-full flex justify-end`}
+            style={{ width: `${progress}%` }}
+          >
+            <Label className="translate-y-4">{progress}%</Label>
+          </div>
         </div>
 
         <DialogFooter>

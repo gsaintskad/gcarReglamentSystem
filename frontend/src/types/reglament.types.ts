@@ -6,8 +6,8 @@ export interface reglamentDto {
 export interface carReglamentDto {
   id?: number;
   reglament_type_id: string;
-  reglament_name:string;
-  reglament_comment:string;
+  name: string;
+  reglament_comment: string;
   car_id: string;
   auto_park_id: string;
   mileage_deadline: number;

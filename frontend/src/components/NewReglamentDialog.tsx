@@ -82,13 +82,22 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
         </DialogHeader>
         <div className="grid grid-cols-2 ">
           <Label>Тип регламенту</Label>
-          <Select onValueChange={(val: number) => setReglament_type_id(val)}>
+          <Select
+            onValueChange={(val: string) => setReglament_type_id(Number(val))}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
               {types!.map((type) => {
-                return <SelectItem value={type.id}>{type.name}</SelectItem>;
+                return (
+                  <SelectItem
+                    key={`new-reglament-select-type-${type.id}-${car.car_id}`}
+                    value={String(type.id)}
+                  >
+                    {type.name}
+                  </SelectItem>
+                );
               })}
             </SelectContent>
           </Select>
@@ -111,14 +120,6 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
             onChange={(e) => setComment(String(e.target.value))}
             placeholder="Учтонення інформації..."
           ></Input>
-
-          {/* <Label>Прогресс</Label>
-          <div className="flex">
-            <div className="flex bg-red-400">
-                <div className={`w-[${}]`}/>
-            </div>
-            <Label>59%</Label>
-          </div> */}
         </div>
 
         <DialogFooter>
