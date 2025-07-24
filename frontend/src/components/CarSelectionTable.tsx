@@ -35,7 +35,7 @@ const CarSelectionTable: React.FC<CarSelectionTableProps> = (
   const [filterType, setFilterType] = useState("license_plate");
   return (
     <div className="flex flex-col overflow-hidden gap-3">
-      <div className="flex items-center gap-5">
+      <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
         <div className="flex items-center flex-nowrap gap-5">
           <Label className="text-nowrap">Пошук по:</Label>
           <Select

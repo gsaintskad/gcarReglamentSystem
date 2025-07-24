@@ -903,6 +903,10 @@ body {
   flex-wrap: nowrap;
 }
 
+.content-between {
+  align-content: space-between;
+}
+
 .items-center {
   align-items: center;
 }
@@ -1668,9 +1672,27 @@ body {
   --tw-ring-color: hsl(var(--ring) / 0.5);
 }
 
+@media not all and (min-width: 640px) {
+  .max-sm\:flex-col {
+    flex-direction: column;
+  }
+
+  .max-sm\:content-between {
+    align-content: space-between;
+  }
+
+  .max-sm\:justify-between {
+    justify-content: space-between;
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:flex-row {
     flex-direction: row;
+  }
+
+  .sm\:flex-col {
+    flex-direction: column;
   }
 
   .sm\:justify-end {
