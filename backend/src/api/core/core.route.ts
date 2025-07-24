@@ -17,6 +17,6 @@ coreRouter.get("/", (req: Request, res: Response) => {
   res.status(200).send("Hello from the GCAR REGLAMENT SYSTEM API Server!");
 });
 coreRouter.use("/myTaxi", myTaxiRouter);
-coreRouter.use("/reglamnets", reglamentRouter);
+coreRouter.use("/reglaments", reglamentRouter);
 
 export default coreRouter;

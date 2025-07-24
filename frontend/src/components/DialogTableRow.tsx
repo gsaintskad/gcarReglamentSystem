@@ -36,7 +36,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
   const { car }: { car: getCarsJson } = props;
   const getReglaments = useCallback<() => Promise<getCarsJson>>(async () => {
     const carReglaments: carReglamentDto[] = await api.get(
-      `/reglamnets/cars?car_id=${car.car_id}`
+      `/reglaments/cars?car_id=${car.car_id}`
     );
     console.log(carReglaments);
     return car as getCarsJson;
@@ -61,7 +61,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             {license_plate}
           </DialogDescription>
         </DialogHeader>
-        <NewReglamentDialog car_id={car.car_id} />
+        <NewReglamentDialog car={car} />
         <Table className="h-16">
           <TableHeader>
             <TableRow>

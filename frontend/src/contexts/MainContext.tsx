@@ -1,7 +1,7 @@
+// frontend/src/contexts/MainContext.tsx
 import api from "@/api/reglamentSystem.api";
 import { getCarsJson } from "@/types/myTaxi.types";
 import { reglamentType } from "@/types/reglament.types";
-import { getReglamentTypes } from "@/utils/reglament.utils";
 import React, {
   createContext,
   useState,
@@ -9,6 +9,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
+import { getReglamentTypes } from "@/utils/reglament.utils";
+import { getMyTaxiCars } from "@/utils/myTaxi.utils";
 
 interface GlobalState {
   cars: getCarsJson[] | undefined;
@@ -35,10 +37,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   useEffect(() => {
     console.log("fetching...");
     async function fetchCarsAndReglamentTypes() {
-      const response = await api.get("/myTaxi/cars");
-      const { data } = response;
-      const { cars } = data;
-
+      const cars: getCarsJson[] = await getMyTaxiCars();
       const reglamentTypes = await getReglamentTypes();
       setGlobalState({ cars, reglamentTypes });
     }
@@ -54,11 +53,13 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   );
 };
 
-// 4. Create a custom hook for easy consumption of the context
-export const useMainContext = () => {
+// This is the custom hook that should be default exported
+const useMainContext = () => {
   const context = useContext(MainContext);
   if (context === undefined) {
     throw new Error("useMainContext must be used within a MainProvider");
   }
   return context;
 };
+
+export default useMainContext;

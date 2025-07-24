@@ -24,36 +24,50 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Value } from "@radix-ui/react-select";
 import { getReglamentTypes } from "@/utils/reglament.utils";
+import useMainContext from "@/contexts/MainContext";
+import { Slider } from "@radix-ui/react-slider";
+import { getCarsJson } from "@/types/myTaxi.types";
 interface NewReglamentDialogProps {
-  car_id: string;
+  car: getCarsJson;
 }
-export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = (
-  props: NewReglamentDialogProps
-) => {
+export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
+  car,
+}: NewReglamentDialogProps) => {
+  const { car_id, auto_park_id, mileage: mileage_stamp } = car;
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
   const [
-    mileage_before_deadeline_to_remember,
-    setMileage_before_deadeline_to_remember,
+    mileage_before_deadline_to_remember,
+    setMileage_before_deadline_to_remember,
   ] = useState<number>();
   const [comment, setComment] = useState<string>("");
 
-  const createReglament = useCallback(
-    async (dto: reglamentTypes.carReglamentDto) => {
-      const response = await api.post("/reglaments/cars", props);
-      return;
-    },
-    [
+  const createReglament = useCallback(async () => {
+    const body = {
       reglament_type_id,
+      car_id,
+      auto_park_id,
       mileage_deadline,
-      mileage_before_deadeline_to_remember,
+      mileage_before_deadline_to_remember,
+      mileage_stamp,
+      telegram_id: 12345,
       comment,
-      props,
-    ]
-  );
- 
+    };
+    const response = await api.post("/reglaments/cars", body);
+    return;
+  }, [
+    reglament_type_id,
+    mileage_deadline,
+    mileage_before_deadline_to_remember,
+    comment,
+    car_id,
+    auto_park_id,
+    mileage_stamp,
+  ]);
+  const { globalState } = useMainContext();
+  const { reglamentTypes: types } = globalState;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -68,32 +82,52 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = (
         </DialogHeader>
         <div className="grid grid-cols-2 ">
           <Label>Тип регламенту</Label>
-          <Select onValueChange={(val) => console.log(val)}>
+          <Select onValueChange={(val: number) => setReglament_type_id(val)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Theme" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              {types!.map((type) => {
+                return <SelectItem value={type.id}>{type.name}</SelectItem>;
+              })}
             </SelectContent>
           </Select>
 
-          <Label>Маркер</Label>
-          <Input></Input>
+          <Label>Deadline(km): </Label>
+          <Input
+            onChange={(e) => setMileage_deadline(Number(e.target.value))}
+            placeholder="15000"
+          ></Input>
 
-          <Label>Нагадати за:</Label>
-          <Input></Input>
+          <Label>Нагадати за (km):</Label>
+          <Input
+            onChange={(e) =>
+              setMileage_before_deadline_to_remember(Number(e.target.value))
+            }
+            placeholder="1000"
+          ></Input>
+          <Label>Коментар:</Label>
+          <Input
+            onChange={(e) => setComment(String(e.target.value))}
+            placeholder="Учтонення інформації..."
+          ></Input>
 
-          <Label>Прогресс</Label>
-          <Label>59%</Label>
+          {/* <Label>Прогресс</Label>
+          <div className="flex">
+            <div className="flex bg-red-400">
+                <div className={`w-[${}]`}/>
+            </div>
+            <Label>59%</Label>
+          </div> */}
         </div>
 
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" onClick={() => createReglament()}>
+            Create reglament
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

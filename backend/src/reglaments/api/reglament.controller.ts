@@ -34,8 +34,9 @@ export const createCarReglamentEndpoint = async (
   res: Response
 ) => {
   try {
-    devLog("assigning reglament to car...");
     const { body: dto }: { body: reglamentTypes.carReglamentDto } = req;
+    devLog("assigning reglament to car...", dto);
+    // return;
     await reglamentService.assignReglamentToCarHandler(dto);
     res.status(204).json({ data: { message: "success" } });
   } catch (error) {
