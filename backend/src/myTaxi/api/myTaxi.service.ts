@@ -14,7 +14,7 @@ export const getCarReglamentDataByLicensePlateHandler = async (
   return car;
 };
 export const getMyTaxiCarActualMileageHandler = async (car_id: string) => {
-  const { rows } = await myTaxiRepo.getCarReglamentDataByLicensePlate(car_id);
+  const { rows } = await myTaxiRepo.getMyTaxiCarActualMileage(car_id);
   const [car] = rows;
   return car.actual_mileage;
 };
