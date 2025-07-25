@@ -55,3 +55,15 @@ export const getCarReglamentsEndpoint = async (req: Request, res: Response) => {
     res.status(500).json({ message: "An unexpected error occurred" });
   }
 };
+
+export const updateCarReglamentEndpoint = async (req: Request, res: Response) => {
+  try {
+    devLog("updating car reglament...");
+    const { body: dto }: { body: reglamentTypes.carReglamentDto } = req;
+    await reglamentService.updateCarReglamentHandler(dto);
+    }
+    catch (error) {
+    console.error("Unexpected error:", error);
+      res.status(500).json({ message: "An unexpected error occurred" });
+    }
+}

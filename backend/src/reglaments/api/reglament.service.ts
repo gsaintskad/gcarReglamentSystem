@@ -21,3 +21,7 @@ export const getCarReglamentsHandler = async () => {
   const carReglaments = await reglamentRepo.getCarReglaments();
   return { carReglaments };
 };
+export const updateCarReglamentHandler = async (dto: reglamentTypes.carReglamentDto) => {
+  await reglamentRepo.updateCarReglament(dto);
+  return true;
+}

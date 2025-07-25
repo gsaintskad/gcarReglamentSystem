@@ -38,6 +38,7 @@ export const getMyTaxiCarActualMileageEndpoint = async (
 ) => {
   try {
     devLog("Getting cars...");
+    
     const { car_id } = req.query;
     if (!car_id) {
       return res.status(400).json({ message: "Car id is required" });

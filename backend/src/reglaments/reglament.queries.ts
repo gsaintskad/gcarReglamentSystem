@@ -1,3 +1,4 @@
+import e from "express";
 import { devLog } from "../shared/dev.utils.js";
 import { reglamentPool } from "./reglament.pool.js";
 import * as reglamentTypes from "./reglament.types.js";
@@ -44,4 +45,14 @@ export const getCarReglaments = async (): Promise<
   const result = await reglamentPool.query(sql);
   const { rows, rowCount } = result;
   return rows as reglamentTypes.carReglamentDto[];
+};
+export const updateCarReglament = async (
+  dto: reglamentTypes.carReglamentDto
+): Promise<void> => {
+  const sql = /*sql*/ `UPDATE cars_to_reglaments SET mileage_deadline = ${dto.mileage_deadline},
+  mileage_before_deadline_to_remember = ${dto.mileage_before_deadline_to_remember},
+  comment = '${dto.comment}' ,
+  reglament_type_id= ${dto.reglament_type_id}
+  WHERE id = ${dto.id}`;
+  await reglamentPool.query(sql);
 };

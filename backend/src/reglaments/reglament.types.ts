@@ -4,9 +4,10 @@ export interface reglamentDto {
 }
 
 export interface carReglamentDto {
+  id?: number;
   reglament_type_id: string;
   car_id: string;
-  license_plate:string;
+  license_plate: string;
   auto_park_id: string;
   mileage_deadline: number;
   mileage_before_deadline_to_remember: number;

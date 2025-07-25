@@ -8,4 +8,5 @@ reglamentRouter.post("/types", reglamentController.addReglamentTypeEndpoint);
 reglamentRouter.get("/types", reglamentController.getReglamentTypesEndpoint);
 reglamentRouter.post("/cars", reglamentController.createCarReglamentEndpoint);
 reglamentRouter.get("/cars", reglamentController.getCarReglamentsEndpoint);
+reglamentRouter.put('/cars',reglamentController.updateCarReglamentEndpoint )
 export default reglamentRouter;

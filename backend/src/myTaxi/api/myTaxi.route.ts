@@ -5,7 +5,6 @@ import * as myTaxiController from "./myTaxi.controller.js"; // Note the .js exte
 const myTaxiRouter = Router();
 
 // myTaxiRouter.get("/cars", myTaxiController.getCarsEndpoint);
-
 myTaxiRouter.get("/cars", myTaxiController.getCarReglamentDataByLicensePlateEndpoint);
 myTaxiRouter.get("/mileage", myTaxiController.getMyTaxiCarActualMileageEndpoint);
 
