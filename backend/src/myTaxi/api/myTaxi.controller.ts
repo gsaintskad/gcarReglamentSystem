@@ -32,3 +32,22 @@ export const getCarReglamentDataByLicensePlateEndpoint = async (
     res.status(500).json({ message: "An unexpected error occurred" });
   }
 };
+export const getMyTaxiCarActualMileageEndpoint = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    devLog("Getting cars...");
+    const { car_id } = req.query;
+    if (!car_id) {
+      return res.status(400).json({ message: "Car id is required" });
+    }
+    const mileage = await myTaxiService.getMyTaxiCarActualMileageHandler(
+      car_id as string
+    );
+    res.status(200).json({ mileage });
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    res.status(500).json({ message: "An unexpected error occurred" });
+  }
+};

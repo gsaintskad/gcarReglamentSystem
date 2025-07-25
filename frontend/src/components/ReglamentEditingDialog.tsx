@@ -116,7 +116,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       reglament_type_description: type!.description,
     };
   }, [reglament_type_id, types]);
-
+  console.log({ reglament, progress, progress_color, bg_color });
   return (
     <Dialog>
       <DialogTrigger asChild>

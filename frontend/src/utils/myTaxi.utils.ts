@@ -6,3 +6,13 @@ export const getMyTaxiCarByLicensePlate = async (license_plate: string) => {
   console.log(car);
   return car;
 };
+export const getMyTaxiCarActualMileage = async (car_id: string) => {
+  const response = await api.get(`/myTaxi/mileage?car_id=${car_id}`);
+  const { data } = response.data;
+  const { mileage } = data;
+  if (!mileage) {
+    return 0;
+  }
+  return mileage;
+
+}

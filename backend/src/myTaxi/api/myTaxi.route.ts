@@ -7,5 +7,6 @@ const myTaxiRouter = Router();
 // myTaxiRouter.get("/cars", myTaxiController.getCarsEndpoint);
 
 myTaxiRouter.get("/cars", myTaxiController.getCarReglamentDataByLicensePlateEndpoint);
+myTaxiRouter.get("/mileage", myTaxiController.getMyTaxiCarActualMileageEndpoint);
 
 export default myTaxiRouter;

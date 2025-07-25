@@ -30,7 +30,7 @@ export const getCarReglamentDataByLicensePlate = async (
     "src",
     "myTaxi",
     "sql",
-    "getCarToCreateAReglamentByLicensePlate.sql"
+    "getActualCarMileage.sql"
   );
 
   // If, for some reason, your 'sql' folder is directly under 'backend' (not in 'src'):
