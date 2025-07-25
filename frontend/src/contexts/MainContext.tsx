@@ -13,7 +13,7 @@ import { getReglamentTypes } from "@/utils/reglament.utils";
 import { getMyTaxiCarById } from "@/utils/myTaxi.utils";
 
 interface GlobalState {
-  cars: getCarsJson[] | undefined;
+  // cars: getCarsJson[] | undefined;
   reglamentTypes: reglamentType[] | undefined;
 }
 
@@ -30,16 +30,17 @@ interface MainProviderProps {
 
 export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   const [globalState, setGlobalState] = useState<GlobalState>({
-    cars: undefined,
+    // cars: undefined,
     reglamentTypes: undefined,
   });
 
   useEffect(() => {
     console.log("fetching...");
     async function fetchCarsAndReglamentTypes() {
-      const cars: getCarsJson[] = await getMyTaxiCarById();
+      // const cars: getCarsJson[] = await getMyTaxiCarById();
       const reglamentTypes = await getReglamentTypes();
-      setGlobalState({ cars, reglamentTypes });
+      console.log(reglamentTypes);
+      setGlobalState({ reglamentTypes });
     }
     fetchCarsAndReglamentTypes();
   }, []);

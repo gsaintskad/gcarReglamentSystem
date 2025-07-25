@@ -29,6 +29,7 @@ import useMainContext from "@/contexts/MainContext";
 import { Slider } from "@radix-ui/react-slider";
 import { getCarsJson } from "@/types/myTaxi.types";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
+import { getMyTaxiCarByLicensePlate } from "@/utils/myTaxi.utils";
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
 }
@@ -65,9 +66,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   ]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
-  const getCarbyLicencePlate = useCallback(async () => {
-    
-  }, [license_plate]);
+  const getAndSaveCarbyLicencePlate = useCallback(
+    async (license_plate: string) => {
+      const car = await getMyTaxiCarByLicensePlate(license_plate);
+      console.log(car);
+    },
+    [license_plate]
+  );
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -92,7 +97,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 }
                 placeholder="AA1234AA"
               ></Input>
-              <Button onClick={async () => {}}>Check</Button>
+              <Button
+                onClick={async () => {
+                  getAndSaveCarbyLicencePlate(license_plate);
+                }}
+              >
+                Check
+              </Button>
             </div>
             <Label className="font-bold">
               status:

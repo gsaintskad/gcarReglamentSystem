@@ -8,6 +8,12 @@ export const getMyTaxiCars = async () => {
   return cars as getCarsJson[];
 };
 
+export const getMyTaxiCarByLicensePlate = async (license_plate: string) => {
+  const response = await api.get(`/myTaxi/cars?license_plate=${license_plate}`);
+  const { car } = response.data;
+  console.log(car);
+  return car;
+};
 export const getMyTaxiCarById = async (car_id: string) => {
   const response = await api.get(`/myTaxi/cars?car_id=${car_id}`);
   const { data } = response;
