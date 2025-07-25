@@ -18,3 +18,17 @@ export const getCarReglaments = async () => {
   const { carReglaments } = data;
   return carReglaments as reglamentTypes.carReglamentDto[];
 };
+export const deleteCarReglament = async (id: number) => {
+  const response = await api.delete(`/reglaments/cars?id=${id}`);
+  const { data } = response;
+  return true;
+};
+export const updateCarReglament = async (
+  dto: reglamentTypes.carReglamentDto,
+  reglament: reglamentTypes.carReglamentDto
+) => {
+
+  const response = await api.put(`/reglaments/cars`, dto);
+  const { data } = response;
+  return true;
+};

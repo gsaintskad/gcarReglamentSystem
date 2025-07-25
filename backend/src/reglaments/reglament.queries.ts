@@ -24,6 +24,9 @@ export const getReglamentTypes = async (): Promise<any> => {
 export const assignReglamentToCar = async (
   dto: reglamentTypes.carReglamentDto
 ): Promise<void> => {
+  if ((process.env.ENV = "DEV")) {
+    dto.mileage_stamp -= 10000;
+  }
   const sql = /*sql*/ `INSERT INTO cars_to_reglaments 
   (reglament_type_id, car_id, auto_park_id, mileage_stamp,mileage_deadline, mileage_before_deadline_to_remember, 
   created_by_telegram_id, updated_by_telegram_id,license_plate${
@@ -54,5 +57,9 @@ export const updateCarReglament = async (
   comment = '${dto.comment}' ,
   reglament_type_id= ${dto.reglament_type_id}
   WHERE id = ${dto.id}`;
+  await reglamentPool.query(sql);
+};
+export const markCarReglamentAsIncactive= async (id: number): Promise<void> => {
+  const sql = /*sql*/ `UPDATE cars_to_reglaments SET is_active = false WHERE id = ${id}`;
   await reglamentPool.query(sql);
 };

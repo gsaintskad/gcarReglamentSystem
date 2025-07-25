@@ -1,3 +1,4 @@
+import e from "express";
 import * as reglamentRepo from "../reglament.queries.js";
 import * as reglamentTypes from "../reglament.types.js";
 
@@ -23,5 +24,9 @@ export const getCarReglamentsHandler = async () => {
 };
 export const updateCarReglamentHandler = async (dto: reglamentTypes.carReglamentDto) => {
   await reglamentRepo.updateCarReglament(dto);
+  return true;
+}
+export const markCarReglamentAsIncactiveHandler = async (id: number) => {
+  await reglamentRepo.markCarReglamentAsIncactive(id);
   return true;
 }

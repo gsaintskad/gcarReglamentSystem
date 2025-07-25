@@ -56,7 +56,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const [actualMileage, setActualMileage] = useState<number>(
     reglament.mileage_stamp
   );
-
+  const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
+    useState<boolean>(false);
   const [
     mileage_before_deadline_to_remember,
     setMileage_before_deadline_to_remember,
@@ -153,51 +154,82 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       <DialogContent className="h-3/4">
         <DialogHeader>
           <DialogTitle>
-            Регламент {reglament_type_name} машини {license_plate}
+            Регламент {reglament_type_name} авто {license_plate}
           </DialogTitle>
           <DialogDescription>
             Тут можна переглянути та внести зміни до регламентів машини
           </DialogDescription>
         </DialogHeader>
-        <Button variant={"destructive"} onClick={() => updateReglament()}>
-          Delete
-        </Button>
-        <div className="grid grid-cols-2 ">
-          <Label>Тип регламенту</Label>
-          <Select
-            onValueChange={(val: string) => setReglament_type_id(Number(val))}
-            value={String(reglament_type_id)}
+        <div className="flex justify-between gap-3">
+          <Button
+            variant={"destructive"}
+            onClick={() => updateReglament()}
+            className="w-1/2"
           >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              {types!.map((type) => {
-                return (
-                  <SelectItem
-                    key={`select-type-${type.id}-${reglament.car_id}`}
-                    value={String(type.id)}
-                  >
-                    {type.name}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          {/* 
-          <Label>Опис регламенту</Label>
-          <Label>{reglament_type_description}</Label> */}
+            Delete
+          </Button>
+          <Button
+            variant={"outline"}
+            onClick={() =>
+              setIsEditingModeTurnedOn(
+                (isEditingModeTurnedOn) => !isEditingModeTurnedOn
+              )
+            }
+            className="w-1/2"
+          >
+            {isEditingModeTurnedOn ? "save" : "Edit"}
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 gap-3 ">
+          <Label>Тип регламенту</Label>
+
+          {isEditingModeTurnedOn ? (
+            <Select
+              onValueChange={(val: string) => setReglament_type_id(Number(val))}
+              value={String(reglament_type_id)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {types!.map((type) => {
+                  return (
+                    <SelectItem
+                      key={`select-type-${type.id}-${reglament.car_id}`}
+                      value={String(type.id)}
+                    >
+                      {type.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          ) : (
+            <Label>{reglament_type_name}</Label>
+          )}
           <Label>Deadline</Label>
-          <Input defaultValue={mileage_deadline}></Input>
+          {isEditingModeTurnedOn ? (
+            <Input defaultValue={mileage_deadline}></Input>
+          ) : (
+            <Label>{mileage_deadline}</Label>
+          )}
 
           <Label>Нагадати за:</Label>
-          <Input defaultValue={mileage_before_deadline_to_remember}></Input>
+          {isEditingModeTurnedOn ? (
+            <Input defaultValue={mileage_before_deadline_to_remember}></Input>
+          ) : (
+            <Label>{mileage_before_deadline_to_remember}</Label>
+          )}
 
-          <Label>Прогресс</Label>
-          <Label>{progress}%</Label>
           <Label>Коментар:</Label>
 
-          <Label>{comment}</Label>
+          {isEditingModeTurnedOn ? (
+            <Input defaultValue={comment}></Input>
+          ) : (
+            <Label>{comment}</Label>
+          )}
+          <Label>Прогресс</Label>
+          <Label>{progress}%</Label>
         </div>
         <div className="h-32 flex items-center justify-center ">
           <Label className="mr-3 text-nowrap">0 KM </Label>

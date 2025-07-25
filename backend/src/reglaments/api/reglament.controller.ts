@@ -67,3 +67,17 @@ export const updateCarReglamentEndpoint = async (req: Request, res: Response) =>
       res.status(500).json({ message: "An unexpected error occurred" });
     }
 }
+export const markCarReglamentAsIncactiveEndpoint = async (req: Request, res: Response) => {
+  try {
+    devLog("updating car reglament...");
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).json({ message: "id is required" });
+    }
+    await reglamentService.markCarReglamentAsIncactiveHandler(Number(id));
+    res.status(204).json({ data: { message: "success" } });
+  } catch (error) {
+    console.error("Unexpected error:", error);  
+    res.status(500).json({ message: "An unexpected error occurred" });
+  }
+}
