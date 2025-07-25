@@ -37,6 +37,7 @@ import api from "@/api/reglamentSystem.api";
 import { reglamentStateBgColors, reglamentStateColors } from "./constants";
 import { bg } from "date-fns/locale";
 import { getMyTaxiCarActualMileage } from "@/utils/myTaxi.utils";
+import { updateCarReglament } from "@/utils/reglament.utils";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
   cb: () => Promise<any>;
@@ -69,7 +70,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   useEffect(() => {
     (async () => {
       const mileage = await getMyTaxiCarActualMileage(car_id);
-      
+
       setActualMileage(mileage);
     })();
   }, [car_id]);
@@ -166,7 +167,16 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
         <div className="flex justify-between gap-3">
           <Button
             variant={"destructive"}
-            onClick={() => updateReglament()}
+            onClick={async () =>
+              await updateCarReglament({
+                id: reglament.id,
+                comment: comment,
+                reglament_type_id: reglament_type_id,
+                mileage_deadline: mileage_deadline,
+                mileage_before_deadline_to_remember:
+                  mileage_before_deadline_to_remember,
+              })
+            }
             className="w-1/2"
           >
             Delete

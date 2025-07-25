@@ -14,5 +14,13 @@ export const getMyTaxiCarActualMileage = async (car_id: string) => {
     return 0;
   }
   return mileage;
-
-}
+};
+export const updateCarReglament = async (dto: {
+  id: number;
+  comment: string;
+  mileage_before_deadline_to_remember: number;
+  mileage_deadline: number;
+  reglament_type_id: number;
+}) => {
+  const response = await api.put(`/reglaments/cars`, dto);
+};
