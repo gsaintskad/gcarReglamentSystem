@@ -9,8 +9,10 @@ export interface carReglamentDto {
   name: string;
   reglament_comment: string;
   car_id: string;
+  license_plate: string;
   auto_park_id: string;
   mileage_deadline: number;
+  actual_mileage: number;
   mileage_before_deadline_to_remember: number;
   telegram_id: number;
   comment: string;

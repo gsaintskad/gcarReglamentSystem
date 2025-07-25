@@ -21,20 +21,31 @@ import {
 } from "@/components/ui/select";
 import { getCarsJson } from "@/types/myTaxi.types";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Label } from "@radix-ui/react-label";
-interface CarSelectionTableProps {
-  cars: getCarsJson[];
-}
+import NewReglamentDialog from "./NewReglamentDialog";
+import {
+  getCarReglamentByCarId,
+  getCarReglaments,
+} from "@/utils/reglament.utils";
+import { carReglamentDto } from "@/types/reglament.types";
+import ReglamentEditingDialog from "./ReglamentEditingDialog";
+interface ReglamentSelectionTableProps {}
 
-const CarSelectionTable: React.FC<CarSelectionTableProps> = (
-  props: CarSelectionTableProps
+const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
+  props: ReglamentSelectionTableProps
 ) => {
-  const { cars }: { cars: getCarsJson[] } = props;
   const [filter, setFilter] = useState("");
   const [filterType, setFilterType] = useState("license_plate");
+  const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
+  const getReglaments = useCallback<() => Promise<void>>(async () => {
+    const carReglaments: carReglamentDto[] = await getCarReglaments();
+    console.log(carReglaments);
+    setReglaments(carReglaments);
+  }, []);
   return (
     <div className="flex flex-col overflow-hidden gap-3">
+      <NewReglamentDialog cb={async () => console.log("cb")} />
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
         <div className="flex items-center flex-nowrap gap-5">
           <Label className="text-nowrap">Пошук по:</Label>
@@ -48,7 +59,7 @@ const CarSelectionTable: React.FC<CarSelectionTableProps> = (
             <SelectContent>
               <SelectItem value={"license_plate"}>license plate</SelectItem>
               <SelectItem value={"city"}>city</SelectItem>
-              <SelectItem value={"model"}>model</SelectItem>
+              <SelectItem value={"reglamentType"}>reglamentType</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -62,26 +73,30 @@ const CarSelectionTable: React.FC<CarSelectionTableProps> = (
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px] font-black">Номер авто</TableHead>
-            <TableHead>Модель</TableHead>
-            <TableHead>Місто</TableHead>
+            <TableHead>Тип Регламенту</TableHead>
+            <TableHead>Залишилось(КМ)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="overflow-y-auto">
-          {cars
-            .filter((car) => {
-              if (filterType === "license_plate") {
-                return car.license_plate.includes(filter);
-              }
-              if (filterType === "city") {
-                return car.city.includes(filter);
-              }
-              if (filterType === "model") {
-                return car.model.includes(filter);
-              }
+          {reglaments
+            .filter((reglament) => {
+              // if (filterType === "license_plate") {
+              //   return reglament.license_plate.includes(filter);
+              // }
+              // if (filterType === "city") {
+              //   return reglament.city.includes(filter);
+              // }
+              // if (filterType === "reglamentType") {
+              //   return reglament.reglament_type_name.includes(filter);
+              // }
               return true;
             })
-            .map((car, i) => (
-              <DialogTableRow car={car} key={`car-${car.license_plate}-${i}`} />
+            .map((reglament, i) => (
+              <ReglamentEditingDialog
+                reglament={reglament}
+                cb={async () => console.log("cb")}
+              />
+              // <DialogTableRow car={car} key={`car-${car.license_plate}-${i}`} />
             ))}
         </TableBody>
         <TableFooter>
@@ -94,4 +109,4 @@ const CarSelectionTable: React.FC<CarSelectionTableProps> = (
     </div>
   );
 };
-export default CarSelectionTable;
+export default ReglamentSelectionTable;

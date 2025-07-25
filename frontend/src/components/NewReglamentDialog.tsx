@@ -28,15 +28,15 @@ import { getReglamentTypes } from "@/utils/reglament.utils";
 import useMainContext from "@/contexts/MainContext";
 import { Slider } from "@radix-ui/react-slider";
 import { getCarsJson } from "@/types/myTaxi.types";
+import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
 interface NewReglamentDialogProps {
-  car: getCarsJson;
   cb: () => Promise<any>;
 }
 export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
-  car,
   cb,
 }: NewReglamentDialogProps) => {
-  const { car_id, auto_park_id, mileage: mileage_stamp } = car;
+  const [license_plate, setLicense_plate] = useState<string>();
+
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
   const [
@@ -48,11 +48,8 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const createReglament = useCallback(async () => {
     const body = {
       reglament_type_id,
-      car_id,
-      auto_park_id,
       mileage_deadline,
       mileage_before_deadline_to_remember,
-      mileage_stamp,
       telegram_id: 12345,
       comment,
     };
@@ -64,13 +61,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     mileage_deadline,
     mileage_before_deadline_to_remember,
     comment,
-    car_id,
-    auto_park_id,
-    mileage_stamp,
+    license_plate,
   ]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
-
+  const getCarbyLicencePlate = useCallback(async () => {
+    
+  }, [license_plate]);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -84,6 +81,24 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 ">
+          <Label>license plate: </Label>
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-3">
+              <Input
+                onChange={(e) =>
+                  setLicense_plate(
+                    convertCyrillicToLatinLicensePlate(e.target.value)
+                  )
+                }
+                placeholder="AA1234AA"
+              ></Input>
+              <Button onClick={async () => {}}>Check</Button>
+            </div>
+            <Label className="font-bold">
+              status:
+              <Label className="text-green-500">{license_plate} found!</Label>
+            </Label>
+          </div>
           <Label>Тип регламенту</Label>
           <Select
             onValueChange={(val: string) => setReglament_type_id(Number(val))}
@@ -95,7 +110,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               {types!.map((type) => {
                 return (
                   <SelectItem
-                    key={`new-reglament-select-type-${type.id}-${car.car_id}`}
+                    key={`new-reglament-select-type-${type.id}`}
                     value={String(type.id)}
                   >
                     {type.name}

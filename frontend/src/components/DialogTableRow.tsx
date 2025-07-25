@@ -35,8 +35,8 @@ export interface DialogTableRowProps {
 const DialogTableRow: React.FC<DialogTableRowProps> = (
   props: DialogTableRowProps
 ) => {
-  const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
   const { car }: { car: getCarsJson } = props;
+  const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
   const getReglaments = useCallback<() => Promise<getCarsJson>>(async () => {
     const carReglaments: carReglamentDto[] = await getCarReglamentByCarId(
       car.car_id
@@ -80,7 +80,7 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
             >
               myTaxi
             </Button>
-            <NewReglamentDialog car={car} cb={getReglaments} />
+            <NewReglamentDialog cb={getReglaments} />
           </div>
           <Table className="h-16">
             <TableHeader>
@@ -95,7 +95,6 @@ const DialogTableRow: React.FC<DialogTableRowProps> = (
               {reglaments?.map((reglament) => (
                 <ReglamentEditingDialog
                   reglament={reglament}
-                  car={car}
                   cb={getReglaments}
                   key={`${reglament.id}-${reglament.car_id}`}
                 />

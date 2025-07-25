@@ -39,14 +39,13 @@ import { reglamentStateBgColors, reglamentStateColors } from "./constants";
 import { bg } from "date-fns/locale";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
-  car: getCarsJson;
   cb: () => Promise<any>;
 }
 const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   props: ReglamentEditingDialogProps
 ) => {
-  const { reglament, car } = props;
-  const { car_id, auto_park_id, mileage: actual_mileage } = car;
+  const { reglament } = props;
+  const { car_id, auto_park_id, actual_mileage, license_plate } = reglament;
   const [reglament_type_id, setReglament_type_id] = useState<number>(
     Number(reglament.reglament_type_id)
   );
@@ -123,6 +122,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     <Dialog>
       <DialogTrigger asChild>
         <TableRow className=" rounded-lg" style={{ backgroundColor: bg_color }}>
+          <TableCell className="font-medium">{license_plate}</TableCell>
+
           <TableCell className="font-medium">{reglament_type_name}</TableCell>
           <TableCell>{progress}%</TableCell>
           <TableCell>{mileage_deadline}</TableCell>
@@ -132,7 +133,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       <DialogContent className="h-3/4">
         <DialogHeader>
           <DialogTitle>
-            Регламент {reglament_type_name} машини {car.license_plate}
+            Регламент {reglament_type_name} машини {license_plate}
           </DialogTitle>
           <DialogDescription>
             Тут можна переглянути та внести зміни до регламентів машини
@@ -154,7 +155,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
               {types!.map((type) => {
                 return (
                   <SelectItem
-                    key={`select-type-${type.id}-${car.car_id}`}
+                    key={`select-type-${type.id}-${reglament.car_id}`}
                     value={String(type.id)}
                   >
                     {type.name}

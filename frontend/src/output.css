@@ -1198,6 +1198,10 @@ body {
   font-weight: 900;
 }
 
+.font-bold {
+  font-weight: 700;
+}
+
 .font-medium {
   font-weight: 500;
 }
@@ -1208,6 +1212,10 @@ body {
 
 .font-semibold {
   font-weight: 600;
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
 
 .leading-none {
@@ -1224,6 +1232,11 @@ body {
 
 .text-destructive-foreground {
   color: hsl(var(--destructive-foreground));
+}
+
+.text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity));
 }
 
 .text-muted-foreground {
@@ -1293,14 +1306,6 @@ body {
 
 .outline {
   outline-style: solid;
-}
-
-.outline-8 {
-  outline-width: 8px;
-}
-
-.outline-slate-900 {
-  outline-color: #0f172a;
 }
 
 .ring-offset-background {

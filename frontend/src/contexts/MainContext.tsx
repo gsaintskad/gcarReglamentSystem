@@ -10,7 +10,7 @@ import React, {
   useEffect,
 } from "react";
 import { getReglamentTypes } from "@/utils/reglament.utils";
-import { getMyTaxiCars } from "@/utils/myTaxi.utils";
+import { getMyTaxiCarById } from "@/utils/myTaxi.utils";
 
 interface GlobalState {
   cars: getCarsJson[] | undefined;
@@ -37,7 +37,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   useEffect(() => {
     console.log("fetching...");
     async function fetchCarsAndReglamentTypes() {
-      const cars: getCarsJson[] = await getMyTaxiCars();
+      const cars: getCarsJson[] = await getMyTaxiCarById();
       const reglamentTypes = await getReglamentTypes();
       setGlobalState({ cars, reglamentTypes });
     }

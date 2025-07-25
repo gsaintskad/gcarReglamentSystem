@@ -12,3 +12,9 @@ export const getCarReglamentByCarId = async (car_id: string) => {
   const { carReglaments } = data;
   return carReglaments as reglamentTypes.carReglamentDto[];
 };
+export const getCarReglaments = async () => {
+  const response = await api.get(`/reglaments/cars`);
+  const { data } = response;
+  const { carReglaments } = data;
+  return carReglaments as reglamentTypes.carReglamentDto[];
+};
