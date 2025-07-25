@@ -53,9 +53,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const [mileage_deadline, setMileage_deadline] = useState<number>(
     reglament.mileage_deadline
   );
-  const [actualMileage, setActualMileage] = useState<number>(
-    reglament.mileage_stamp
-  );
+  const [actualMileage, setActualMileage] = useState<number>();
   const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
     useState<boolean>(false);
   const [
@@ -63,9 +61,15 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     setMileage_before_deadline_to_remember,
   ] = useState<number>(reglament.mileage_before_deadline_to_remember);
   const [comment, setComment] = useState<string>(reglament.comment);
+  // getMyTaxiCarActualMileage(car_id).then((mileage) => {
+  //   console.log({ mileage, mileage_stamp });
+  //   setActualMileage(mileage);
+  //   console.log({ actualMileage, mileage });
+  // });
   useEffect(() => {
     (async () => {
       const mileage = await getMyTaxiCarActualMileage(car_id);
+      
       setActualMileage(mileage);
     })();
   }, [car_id]);
@@ -93,7 +97,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
 
   const { progress, progress_color, bg_color } = useMemo(() => {
     let progress = Math.floor(
-      ((actualMileage - reglament.mileage_stamp) /
+      ((actualMileage! - reglament.mileage_stamp) /
         (reglament.mileage_deadline * 1000)) *
         100
     );
@@ -118,13 +122,12 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       bg_color = reglamentStateBgColors.new;
       progress_color = reglamentStateColors.new;
     }
-    console.log({ progress, notify_marker, progress_color, bg_color });
     return {
       progress,
       progress_color,
       bg_color,
     };
-  }, [reglament, mileage_stamp]);
+  }, [reglament, mileage_stamp, actualMileage]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
   const { reglament_type_name, reglament_type_description } = useMemo<{
@@ -137,8 +140,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       reglament_type_description: type!.description,
     };
   }, [reglament_type_id, types]);
-  console.log({ reglament, progress, progress_color, bg_color });
-  return (
+  // console.log({ reglament, progress, progress_color, bg_color });
+  return actualMileage ? (
     <Dialog>
       <DialogTrigger asChild>
         <TableRow className=" rounded-lg" style={{ backgroundColor: bg_color }}>
@@ -257,6 +260,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  ) : (
+    <Label>Loading...</Label>
   );
 };
 export default ReglamentEditingDialog;
