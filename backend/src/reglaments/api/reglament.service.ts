@@ -17,7 +17,7 @@ export const assignReglamentToCarHandler = async (
   await reglamentRepo.assignReglamentToCar(dto);
   return true;
 };
-export const getCarReglamentsHandler = async (car_id: string) => {
-  const carReglaments = await reglamentRepo.getCarReglaments(car_id);
+export const getCarReglamentsHandler = async () => {
+  const carReglaments = await reglamentRepo.getCarReglaments();
   return { carReglaments };
 };

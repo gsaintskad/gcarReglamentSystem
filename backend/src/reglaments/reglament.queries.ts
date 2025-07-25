@@ -37,10 +37,10 @@ export const assignReglamentToCar = async (
   devLog("quering ... ", sql);
   await reglamentPool.query(sql);
 };
-export const getCarReglaments = async (
-  car_id: string
-): Promise<reglamentTypes.carReglamentDto[]> => {
-  const sql = /*sql*/ `select * from cars_to_reglaments where car_id='${car_id}'`;
+export const getCarReglaments = async (): Promise<
+  reglamentTypes.carReglamentDto[]
+> => {
+  const sql = /*sql*/ `select * from cars_to_reglaments`;
   const result = await reglamentPool.query(sql);
   const { rows, rowCount } = result;
   return rows as reglamentTypes.carReglamentDto[];
