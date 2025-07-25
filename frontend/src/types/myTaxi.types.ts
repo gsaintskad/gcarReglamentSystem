@@ -1,9 +1,8 @@
-export type getCarsJson = {
-  license_plate: string;
-  car_id: string;
+export type licensePlateCheckedCar = {
+  actual_mileage: number;
   auto_park_id: string;
-  mileage: number;
-  color: string;
-  model: string;
-  city: string;
+  car_id: string;
+  last_actualization: string;
+  license_plate: string;
+  name: string;
 };

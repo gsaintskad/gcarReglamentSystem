@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import * as reglamentTypes from "../types/reglament.types";
 import api from "@/api/reglamentSystem.api";
 import { useState } from "react";
@@ -27,9 +27,9 @@ import { Label } from "@/components/ui/label";
 import { getReglamentTypes } from "@/utils/reglament.utils";
 import useMainContext from "@/contexts/MainContext";
 import { Slider } from "@radix-ui/react-slider";
-import { getCarsJson } from "@/types/myTaxi.types";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
 import { getMyTaxiCarByLicensePlate } from "@/utils/myTaxi.utils";
+import { licensePlateCheckedCar } from "@/types/myTaxi.types";
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
 }
@@ -37,7 +37,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   cb,
 }: NewReglamentDialogProps) => {
   const [license_plate, setLicense_plate] = useState<string>();
-
+  const [car, setCar] = useState<licensePlateCheckedCar | undefined>();
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
   const [
@@ -45,7 +45,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     setMileage_before_deadline_to_remember,
   ] = useState<number>();
   const [comment, setComment] = useState<string>("");
-
+  const is_car_found = useMemo<Boolean>(() => {
+    return !!car && license_plate == car!.license_plate;
+  }, [license_plate, car]);
   const createReglament = useCallback(async () => {
     const body = {
       reglament_type_id,
@@ -69,7 +71,8 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const getAndSaveCarbyLicencePlate = useCallback(
     async (license_plate: string) => {
       const car = await getMyTaxiCarByLicensePlate(license_plate);
-      console.log(car);
+      car.actual_mileage = Number(car.actual_mileage);
+      setCar(car as licensePlateCheckedCar);
     },
     [license_plate]
   );
@@ -99,7 +102,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               ></Input>
               <Button
                 onClick={async () => {
-                  getAndSaveCarbyLicencePlate(license_plate);
+                  getAndSaveCarbyLicencePlate(license_plate!);
                 }}
               >
                 Check
@@ -107,12 +110,23 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
             </div>
             <Label className="font-bold">
               status:
-              <Label className="text-green-500">{license_plate} found!</Label>
+              {!license_plate && !is_car_found && (
+                <Label>click the button to check {license_plate}</Label>
+              )}
+              {!is_car_found && license_plate && (
+                <Label className="text-red-600">
+                  {license_plate} not found!
+                </Label>
+              )}
+              {is_car_found && (
+                <Label className="text-green-600">{license_plate} found!</Label>
+              )}
             </Label>
           </div>
           <Label>Тип регламенту</Label>
           <Select
             onValueChange={(val: string) => setReglament_type_id(Number(val))}
+            disabled={!is_car_found}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Type" />
@@ -133,12 +147,14 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
 
           <Label>Deadline(km): </Label>
           <Input
+            disabled={!is_car_found}
             onChange={(e) => setMileage_deadline(Number(e.target.value))}
             placeholder="15000"
           ></Input>
 
           <Label>Нагадати за (km):</Label>
           <Input
+            disabled={!is_car_found}
             onChange={(e) =>
               setMileage_before_deadline_to_remember(Number(e.target.value))
             }
@@ -146,6 +162,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           ></Input>
           <Label>Коментар:</Label>
           <Input
+            disabled={!is_car_found}
             onChange={(e) => setComment(String(e.target.value))}
             placeholder="Учтонення інформації..."
           ></Input>
