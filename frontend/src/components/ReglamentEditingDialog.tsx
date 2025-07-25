@@ -32,10 +32,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { carReglamentDto } from "@/types/reglament.types";
 import useMainContext from "@/contexts/MainContext";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "@/api/reglamentSystem.api";
 import { reglamentStateBgColors, reglamentStateColors } from "./constants";
 import { bg } from "date-fns/locale";
+import { getMyTaxiCarActualMileage } from "@/utils/myTaxi.utils";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
   cb: () => Promise<any>;
@@ -44,19 +45,29 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   props: ReglamentEditingDialogProps
 ) => {
   const { reglament } = props;
-  const { car_id, auto_park_id, actual_mileage, license_plate } = reglament;
+
+  const { car_id, auto_park_id, mileage_stamp, license_plate } = reglament;
   const [reglament_type_id, setReglament_type_id] = useState<number>(
     Number(reglament.reglament_type_id)
   );
   const [mileage_deadline, setMileage_deadline] = useState<number>(
     reglament.mileage_deadline
   );
+  const [actualMileage, setActualMileage] = useState<number>(
+    reglament.mileage_stamp
+  );
+
   const [
     mileage_before_deadline_to_remember,
     setMileage_before_deadline_to_remember,
   ] = useState<number>(reglament.mileage_before_deadline_to_remember);
   const [comment, setComment] = useState<string>(reglament.comment);
-
+  useEffect(() => {
+    (async () => {
+      const mileage = await getMyTaxiCarActualMileage(car_id);
+      setActualMileage(mileage);
+    })();
+  }, [car_id]);
   const updateReglament = useCallback(async () => {
     const body = {
       reglament_type_id,
@@ -80,8 +91,17 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   ]);
 
   const { progress, progress_color, bg_color } = useMemo(() => {
-    const progress = Math.floor(
-      ((actual_mileage + 5 - reglament.mileage_stamp) /
+    let progress = Math.floor(
+      ((actualMileage - reglament.mileage_stamp) /
+        (reglament.mileage_deadline * 1000)) *
+        100
+    );
+    if (reglament.mileage_deadline == 0) {
+      progress = 100;
+    }
+    const notify_marker = Math.floor(
+      ((reglament.mileage_deadline -
+        reglament.mileage_before_deadline_to_remember) /
         reglament.mileage_deadline) *
         100
     );
@@ -90,20 +110,20 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     if (progress >= 100) {
       progress_color = reglamentStateColors.expired;
       bg_color = reglamentStateBgColors.expired;
-    } else if (progress >= 50) {
+    } else if (progress >= notify_marker) {
       progress_color = reglamentStateColors.soon;
       bg_color = reglamentStateBgColors.soon;
     } else {
       bg_color = reglamentStateBgColors.new;
       progress_color = reglamentStateColors.new;
     }
-
+    console.log({ progress, notify_marker, progress_color, bg_color });
     return {
       progress,
       progress_color,
       bg_color,
     };
-  }, [reglament, actual_mileage]);
+  }, [reglament, mileage_stamp]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
   const { reglament_type_name, reglament_type_description } = useMemo<{
@@ -164,9 +184,9 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
               })}
             </SelectContent>
           </Select>
-
+          {/* 
           <Label>Опис регламенту</Label>
-          <Label>{reglament_type_description}</Label>
+          <Label>{reglament_type_description}</Label> */}
           <Label>Deadline</Label>
           <Input defaultValue={mileage_deadline}></Input>
 
@@ -175,21 +195,27 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
 
           <Label>Прогресс</Label>
           <Label>{progress}%</Label>
-        </div>
-        <div className="flex bg-gray-300 rounded-full justify-start w-full h-3">
-          <div
-            className={`h-full rounded-full flex justify-end`}
-            style={{
-              width: `${progress}%`,
-              backgroundColor: progress_color,
-            }}
-          >
-            <Label className="translate-y-4">{progress}%</Label>
-          </div>
-        </div>
-        <div className="flex">
           <Label>Коментар:</Label>
+
           <Label>{comment}</Label>
+        </div>
+        <div className="h-32 flex items-center justify-center ">
+          <Label className="mr-3 text-nowrap">0 KM </Label>
+          <div className="flex bg-gray-300 rounded-full justify-start w-[60%] h-3">
+            <div
+              className={`h-full rounded-full flex justify-end`}
+              style={{
+                width: `${progress}%`,
+                backgroundColor: progress_color,
+              }}
+            >
+              <Label className="translate-y-4">{progress}%</Label>
+            </div>
+          </div>
+
+          <Label className="ml-3 text-nowrap">
+            {reglament.mileage_deadline} KM
+          </Label>
         </div>
 
         <DialogFooter>
