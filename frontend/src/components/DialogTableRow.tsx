@@ -22,7 +22,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
-import { getCarsJson } from "@/types/myTaxi.types";
 import { useCallback, useState } from "react";
 import api from "@/api/reglamentSystem.api";
 import { carReglamentDto } from "@/types/reglament.types";

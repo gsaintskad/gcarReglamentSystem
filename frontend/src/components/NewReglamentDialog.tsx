@@ -50,11 +50,25 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   }, [license_plate, car]);
   const createReglament = useCallback(async () => {
     const body = {
-      reglament_type_id,
+      reglament_type_id: String(reglament_type_id),
+      car_id: String(car!.car_id),
+      license_plate: String(car!.license_plate),
+      auto_park_id: String(car!.auto_park_id),
       mileage_deadline,
       mileage_before_deadline_to_remember,
       telegram_id: 12345,
       comment,
+      mileage_stamp: car!.actual_mileage,
+    } as {
+      reglament_type_id: string;
+      car_id: string;
+      license_plate: string;
+      auto_park_id: string;
+      mileage_deadline: number;
+      mileage_before_deadline_to_remember: number;
+      telegram_id: number;
+      comment: string;
+      mileage_stamp: number;
     };
     const response = await api.post("/reglaments/cars", body);
     cb();
@@ -65,6 +79,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     mileage_before_deadline_to_remember,
     comment,
     license_plate,
+    car,
   ]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
@@ -93,11 +108,11 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           <div className="flex flex-col gap-3">
             <div className="flex gap-3">
               <Input
-                onChange={(e) =>
-                  setLicense_plate(
-                    convertCyrillicToLatinLicensePlate(e.target.value)
-                  )
-                }
+                onChange={(e) => {
+                  const val = e.target.value.toUpperCase();
+                  setLicense_plate(convertCyrillicToLatinLicensePlate(val));
+                }}
+                value={license_plate}
                 placeholder="AA1234AA"
               ></Input>
               <Button
@@ -170,7 +185,19 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="submit" onClick={() => createReglament()}>
+            <Button
+              type="submit"
+              onClick={() => {
+                createReglament();
+                setCar(undefined);
+                setLicense_plate(undefined);
+                setReglament_type_id(undefined);
+                setMileage_deadline(undefined);
+                setMileage_before_deadline_to_remember(undefined);
+                setComment("");
+                cb();
+              }}
+            >
               Create reglament
             </Button>
           </DialogClose>

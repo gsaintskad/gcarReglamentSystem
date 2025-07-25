@@ -25,13 +25,13 @@ export const assignReglamentToCar = async (
 ): Promise<void> => {
   const sql = /*sql*/ `INSERT INTO cars_to_reglaments 
   (reglament_type_id, car_id, auto_park_id, mileage_stamp,mileage_deadline, mileage_before_deadline_to_remember, 
-  created_by_telegram_id, updated_by_telegram_id${
+  created_by_telegram_id, updated_by_telegram_id,license_plate${
     dto.comment ? `,comment` : ""
   }) VALUES ('${dto.reglament_type_id}', '${dto.car_id}', '${
     dto.auto_park_id
   }',${dto.mileage_stamp}, ${dto.mileage_deadline}, ${
     dto.mileage_before_deadline_to_remember
-  },${dto.telegram_id},${dto.telegram_id}${
+  },${dto.telegram_id},${dto.telegram_id},'${dto.license_plate}'${
     dto.comment ? `,'${dto.comment}'` : ""
   })`;
   devLog("quering ... ", sql);

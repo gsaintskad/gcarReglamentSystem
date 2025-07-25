@@ -18,7 +18,7 @@ export async function up(knex: Knex): Promise<void> {
     // Change 'reglament_type_id' to an integer to match 'reglament_types.id'
     // Ensure this column type matches the primary key type of 'reglament_types' table
     table.integer("reglament_type_id").unsigned().notNullable(); // .unsigned() is good practice for foreign keys referencing auto-incrementing IDs
-
+    table.string("license_plate").notNullable();
     table.uuid("car_id").notNullable(); // Assuming car_id is still a UUID for now
     table.integer("mileage_stamp").notNullable();
     table.boolean("is_active").notNullable().defaultTo(true);
