@@ -11,7 +11,7 @@ function App() {
   const { globalState } = useMainContext();
 
   return (
-    <div className="flex flex-col  justify-center px-10 py-10 h-screen">
+    <div className="flex flex-col  justify-center px-1 py-10 h-screen">
       <Label> WELCOME TO THE GCAR REGLAMENT SYSTEM 😎</Label>
       <br></br>
       <br></br>

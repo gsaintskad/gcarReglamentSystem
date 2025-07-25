@@ -40,6 +40,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const [car, setCar] = useState<licensePlateCheckedCar | undefined>();
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [
     mileage_before_deadline_to_remember,
     setMileage_before_deadline_to_remember,
@@ -71,7 +72,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
       mileage_stamp: number;
     };
     const response = await api.post("/reglaments/cars", body);
-    cb();
+    await cb();
     return;
   }, [
     reglament_type_id,
@@ -118,6 +119,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               <Button
                 onClick={async () => {
                   getAndSaveCarbyLicencePlate(license_plate!);
+                  setIsChecked(true);
                 }}
               >
                 Check
@@ -125,16 +127,16 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
             </div>
             <Label className="font-bold">
               status:
-              {!license_plate && !is_car_found && (
-                <Label>click the button to check {license_plate}</Label>
-              )}
-              {!is_car_found && license_plate && (
+              {!is_car_found && license_plate && isChecked && (
                 <Label className="text-red-600">
                   {license_plate} not found!
                 </Label>
               )}
-              {is_car_found && (
+              {is_car_found && isChecked && (
                 <Label className="text-green-600">{license_plate} found!</Label>
+              )}
+              {!isChecked && (
+                <Label>click the button to check {license_plate}</Label>
               )}
             </Label>
           </div>

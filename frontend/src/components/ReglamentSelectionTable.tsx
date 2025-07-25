@@ -25,9 +25,11 @@ import NewReglamentDialog from "./NewReglamentDialog";
 import {
   getCarReglamentByCarId,
   getCarReglaments,
+  getReglamentTypes,
 } from "@/utils/reglament.utils";
 import { carReglamentDto } from "@/types/reglament.types";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
+import useMainContext from "@/contexts/MainContext";
 interface ReglamentSelectionTableProps {}
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
@@ -35,15 +37,16 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
 ) => {
   const [filter, setFilter] = useState("");
   const [filterType, setFilterType] = useState("license_plate");
-  const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
-  const getReglaments = useCallback<() => Promise<void>>(async () => {
-    const carReglaments: carReglamentDto[] = await getCarReglaments();
-    console.log(carReglaments);
-    setReglaments(carReglaments);
-  }, []);
+  // const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
+  const { globalState, setGlobalState } = useMainContext();
+  const { reglaments } = globalState;
   return (
     <div className="flex flex-col overflow-hidden gap-3">
-      <NewReglamentDialog cb={async () => console.log("cb")} />
+      <NewReglamentDialog
+        cb={async () => {
+          window.location.reload();
+        }}
+      />
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
         <div className="flex items-center flex-nowrap gap-5">
           <Label className="text-nowrap">Пошук по:</Label>
@@ -72,11 +75,12 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
           <TableRow>
             <TableHead className="w-[100px] font-black">Номер авто</TableHead>
             <TableHead>Тип Регламенту</TableHead>
-            <TableHead>Залишилось(КМ)</TableHead>
+            <TableHead className="text-center">Дедлайн (км)</TableHead>
+            <TableHead className="text-center">Нагадати за (км):</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="overflow-y-auto">
-          {reglaments
+          {reglaments!
             .filter((reglament) => {
               // if (filterType === "license_plate") {
               //   return reglament.license_plate.includes(filter);
@@ -91,6 +95,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
             })
             .map((reglament, i) => (
               <ReglamentEditingDialog
+                key={`reglament-${reglament.car_id}-${i}`}
                 reglament={reglament}
                 cb={async () => console.log("cb")}
               />

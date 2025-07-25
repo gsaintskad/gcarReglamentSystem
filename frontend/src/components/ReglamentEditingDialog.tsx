@@ -123,10 +123,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
         <TableRow className=" rounded-lg" style={{ backgroundColor: bg_color }}>
           <TableCell className="font-medium">{license_plate}</TableCell>
 
-          <TableCell className="font-medium">{reglament_type_name}</TableCell>
-          <TableCell>{progress}%</TableCell>
-          <TableCell>{mileage_deadline}</TableCell>
-          <TableCell>{mileage_before_deadline_to_remember}</TableCell>
+          <TableCell className="font-medium ">{reglament_type_name}</TableCell>
+          <TableCell className="text-center">{mileage_deadline}</TableCell>
+          <TableCell className="text-center">
+            {mileage_before_deadline_to_remember}
+          </TableCell>
         </TableRow>
       </DialogTrigger>
       <DialogContent className="h-3/4">

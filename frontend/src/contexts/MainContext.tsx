@@ -1,6 +1,6 @@
 // frontend/src/contexts/MainContext.tsx
 import api from "@/api/reglamentSystem.api";
-import { reglamentType } from "@/types/reglament.types";
+import { carReglamentDto, reglamentType } from "@/types/reglament.types";
 import React, {
   createContext,
   useState,
@@ -8,10 +8,10 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { getReglamentTypes } from "@/utils/reglament.utils";
+import { getCarReglaments, getReglamentTypes } from "@/utils/reglament.utils";
 
 interface GlobalState {
-  // cars: getCarsJson[] | undefined;
+  reglaments: carReglamentDto[] | undefined;
   reglamentTypes: reglamentType[] | undefined;
 }
 
@@ -29,6 +29,7 @@ interface MainProviderProps {
 export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   const [globalState, setGlobalState] = useState<GlobalState>({
     // cars: undefined,
+    reglaments: undefined,
     reglamentTypes: undefined,
   });
 
@@ -37,8 +38,9 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     async function fetchCarsAndReglamentTypes() {
       // const cars: getCarsJson[] = await getMyTaxiCarById();
       const reglamentTypes = await getReglamentTypes();
-      console.log(reglamentTypes);
-      setGlobalState({ reglamentTypes });
+      const reglaments = await getCarReglaments();
+      console.log(reglaments);
+      setGlobalState({ reglaments, reglamentTypes });
     }
     fetchCarsAndReglamentTypes();
   }, []);
