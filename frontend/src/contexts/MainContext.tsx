@@ -1,6 +1,5 @@
 // frontend/src/contexts/MainContext.tsx
 import api from "@/api/reglamentSystem.api";
-import { getCarsJson } from "@/types/myTaxi.types";
 import { reglamentType } from "@/types/reglament.types";
 import React, {
   createContext,
@@ -10,7 +9,6 @@ import React, {
   useEffect,
 } from "react";
 import { getReglamentTypes } from "@/utils/reglament.utils";
-import { getMyTaxiCarById } from "@/utils/myTaxi.utils";
 
 interface GlobalState {
   // cars: getCarsJson[] | undefined;

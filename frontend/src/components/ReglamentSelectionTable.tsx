@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import DialogTableRow from "./DialogTableRow";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -19,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getCarsJson } from "@/types/myTaxi.types";
 import { Input } from "./ui/input";
 import { useCallback, useState } from "react";
 import { Label } from "@radix-ui/react-label";

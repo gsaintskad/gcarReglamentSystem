@@ -33,7 +33,6 @@ import { Label } from "@/components/ui/label";
 import { carReglamentDto } from "@/types/reglament.types";
 import useMainContext from "@/contexts/MainContext";
 import { useCallback, useMemo, useState } from "react";
-import { getCarsJson } from "@/types/myTaxi.types";
 import api from "@/api/reglamentSystem.api";
 import { reglamentStateBgColors, reglamentStateColors } from "./constants";
 import { bg } from "date-fns/locale";
