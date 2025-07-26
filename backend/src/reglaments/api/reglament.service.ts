@@ -26,7 +26,7 @@ export const updateCarReglamentHandler = async (dto: reglamentTypes.carReglament
   await reglamentRepo.updateCarReglament(dto);
   return true;
 }
-export const markCarReglamentAsIncactiveHandler = async (id: number) => {
-  await reglamentRepo.markCarReglamentAsIncactive(id);
+export const markCarReglamentAsIncactiveHandler = async (id: number,telegram_id: number) => {
+  await reglamentRepo.markCarReglamentAsIncactive(id,telegram_id);
   return true;
 }

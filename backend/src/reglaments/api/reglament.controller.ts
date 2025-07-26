@@ -70,11 +70,11 @@ export const updateCarReglamentEndpoint = async (req: Request, res: Response) =>
 export const markCarReglamentAsIncactiveEndpoint = async (req: Request, res: Response) => {
   try {
     devLog("updating car reglament...");
-    const { id } = req.query;
+    const { id,telegram_id } = req.query;
     if (!id) {
       return res.status(400).json({ message: "id is required" });
     }
-    await reglamentService.markCarReglamentAsIncactiveHandler(Number(id));
+    await reglamentService.markCarReglamentAsIncactiveHandler(Number(id),Number(telegram_id));
     res.status(204).json({ data: { message: "success" } });
   } catch (error) {
     console.error("Unexpected error:", error);  

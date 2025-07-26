@@ -42,11 +42,6 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   const { reglaments } = globalState;
   return (
     <div className="flex flex-col overflow-hidden gap-3">
-      <NewReglamentDialog
-        cb={async () => {
-          window.location.reload();
-        }}
-      />
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
         <div className="flex items-center flex-nowrap gap-5">
           <Label className="text-nowrap">Пошук по:</Label>
@@ -63,11 +58,26 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               <SelectItem value={"reglamentType"}>reglamentType</SelectItem>
             </SelectContent>
           </Select>
+
+          <Button
+            onClick={() => window.location.reload()}
+            className="block md:hidden"
+          >
+            Reload
+          </Button>
         </div>
-        <Input
-          placeholder="Search..."
-          onChange={(e) => setFilter(e.target.value)}
-        />
+        <div className="flex gap-3">
+          <Input
+            placeholder="Search..."
+            onChange={(e) => setFilter(e.target.value)}
+          />
+
+          <NewReglamentDialog
+            cb={async () => {
+              window.location.reload();
+            }}
+          />
+        </div>
       </div>
       <Table className="w-full ">
         <TableCaption>A list of your recent invoices.</TableCaption>

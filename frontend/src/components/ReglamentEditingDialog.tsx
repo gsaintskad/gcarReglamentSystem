@@ -74,41 +74,18 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       setActualMileage(mileage);
     })();
   }, [car_id]);
-  const updateReglament = useCallback(async () => {
-    const body = {
-      reglament_type_id,
-      car_id,
-      auto_park_id,
-      mileage_deadline,
-      mileage_before_deadline_to_remember,
-      mileage_stamp: reglament.mileage_stamp,
-      telegram_id: 12345,
-      comment,
-    };
-    const response = await api.put("/reglaments/cars", body);
-    return;
-  }, [
-    reglament_type_id,
-    mileage_deadline,
-    mileage_before_deadline_to_remember,
-    comment,
-    car_id,
-    auto_park_id,
-  ]);
 
   const { progress, progress_color, bg_color } = useMemo(() => {
     let progress = Math.floor(
-      ((actualMileage! - reglament.mileage_stamp) /
-        (reglament.mileage_deadline * 1000)) *
+      ((actualMileage! - reglament.mileage_stamp) / (mileage_deadline * 1000)) *
         100
     );
-    if (reglament.mileage_deadline == 0) {
+    if (mileage_deadline == 0) {
       progress = 100;
     }
     const notify_marker = Math.floor(
-      ((reglament.mileage_deadline -
-        reglament.mileage_before_deadline_to_remember) /
-        reglament.mileage_deadline) *
+      ((mileage_deadline - mileage_before_deadline_to_remember) /
+        mileage_deadline) *
         100
     );
     let progress_color;
@@ -128,7 +105,13 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       progress_color,
       bg_color,
     };
-  }, [reglament, mileage_stamp, actualMileage]);
+  }, [
+    reglament,
+    mileage_stamp,
+    actualMileage,
+    mileage_before_deadline_to_remember,
+    mileage_deadline,
+  ]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types } = globalState;
   const { reglament_type_name, reglament_type_description } = useMemo<{
@@ -167,27 +150,37 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
         <div className="flex justify-between gap-3">
           <Button
             variant={"destructive"}
-            onClick={async () =>
-              await updateCarReglament({
-                id: reglament.id,
-                comment: comment,
-                reglament_type_id: reglament_type_id,
-                mileage_deadline: mileage_deadline,
-                mileage_before_deadline_to_remember:
-                  mileage_before_deadline_to_remember,
-              })
-            }
+            onClick={async () => {
+              await deleteCarReglament(
+                reglament.id,
+                12345//telegram_id
+              );
+              window.location.reload();
+            }}
             className="w-1/2"
           >
             Delete
           </Button>
           <Button
             variant={"outline"}
-            onClick={() =>
+            onClick={async () => {
               setIsEditingModeTurnedOn(
                 (isEditingModeTurnedOn) => !isEditingModeTurnedOn
-              )
-            }
+              );
+              if (isEditingModeTurnedOn) {
+                await updateCarReglament(
+                  {
+                    comment,
+                    reglament_type_id,
+                    mileage_deadline,
+                    mileage_before_deadline_to_remember,
+                    telegram_id: 12345,
+                  },
+                  reglament
+                );
+                window.location.reload();
+              }
+            }}
             className="w-1/2"
           >
             {isEditingModeTurnedOn ? "save" : "Edit"}
@@ -222,14 +215,22 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           )}
           <Label>Deadline</Label>
           {isEditingModeTurnedOn ? (
-            <Input defaultValue={mileage_deadline}></Input>
+            <Input
+              defaultValue={mileage_deadline}
+              onChange={(e) => setMileage_deadline(Number(e.target.value))}
+            ></Input>
           ) : (
             <Label>{mileage_deadline}</Label>
           )}
 
           <Label>Нагадати за:</Label>
           {isEditingModeTurnedOn ? (
-            <Input defaultValue={mileage_before_deadline_to_remember}></Input>
+            <Input
+              defaultValue={mileage_before_deadline_to_remember}
+              onChange={(e) =>
+                setMileage_before_deadline_to_remember(Number(e.target.value))
+              }
+            ></Input>
           ) : (
             <Label>{mileage_before_deadline_to_remember}</Label>
           )}
@@ -237,7 +238,10 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           <Label>Коментар:</Label>
 
           {isEditingModeTurnedOn ? (
-            <Input defaultValue={comment}></Input>
+            <Input
+              defaultValue={comment}
+              onChange={(e) => setComment(String(e.target.value))}
+            ></Input>
           ) : (
             <Label>{comment}</Label>
           )}
@@ -265,7 +269,24 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="submit">Save changes</Button>
+            <Button
+              type="submit"
+              onClick={async () => {
+                await updateCarReglament(
+                  {
+                    comment,
+                    reglament_type_id,
+                    mileage_deadline,
+                    mileage_before_deadline_to_remember,
+                    telegram_id: 12345,
+                  },
+                  reglament
+                );
+                window.location.reload();
+              }}
+            >
+              Save changes
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

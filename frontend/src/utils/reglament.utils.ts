@@ -24,11 +24,17 @@ export const deleteCarReglament = async (id: number) => {
   return true;
 };
 export const updateCarReglament = async (
-  dto: reglamentTypes.carReglamentDto,
+  dto: {
+    comment: string;
+    reglament_type_id: number;
+    mileage_deadline: number;
+    mileage_before_deadline_to_remember: number;
+    telegram_id: number;
+  },
   reglament: reglamentTypes.carReglamentDto
 ) => {
-
-  const response = await api.put(`/reglaments/cars`, dto);
+  const { id } = reglament;
+  const response = await api.put(`/reglaments/cars`, { ...dto, id });
   const { data } = response;
   return true;
 };
