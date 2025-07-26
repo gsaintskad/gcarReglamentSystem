@@ -12,12 +12,10 @@ function App() {
   const { globalState } = useMainContext();
 
   return (
-    <div className="flex flex-col  justify-center items-center px-1 py-10 h-screen w-full border  border-black border-solid rounded-sm">
+    <div className="flex flex-col  items-center px-1 py-10 h-screen w-full border  border-black border-solid rounded-sm">
       <div className="md:w-2/3">
         <div className="flex">
           <Label> WELCOME TO THE GCAR REGLAMENT SYSTEM 😎</Label>
-
-  
         </div>
         <br></br>
         <br></br>

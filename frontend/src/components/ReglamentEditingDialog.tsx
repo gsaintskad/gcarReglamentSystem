@@ -156,7 +156,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             onClick={async () => {
               await deleteCarReglament(
                 Number(reglament.id),
-                12345 //telegram_id
+                77777 //telegram_id
               );
               window.location.reload();
             }}
@@ -266,7 +266,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           </div>
 
           <Label className="ml-3 text-nowrap">
-            {reglament.mileage_deadline} KM
+            {mileage_deadline} KM
           </Label>
         </div>
 

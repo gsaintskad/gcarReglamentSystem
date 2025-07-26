@@ -30,6 +30,7 @@ import {
 import { carReglamentDto } from "@/types/reglament.types";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import useMainContext from "@/contexts/MainContext";
+import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
 interface ReglamentSelectionTableProps {}
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
@@ -37,9 +38,9 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
 ) => {
   const [filter, setFilter] = useState("");
   const [filterType, setFilterType] = useState("license_plate");
-  // const [reglaments, setReglaments] = useState<carReglamentDto[]>([]);
+  const [reglament_type_id, setReglament_type_id] = useState<number>(0);
   const { globalState, setGlobalState } = useMainContext();
-  const { reglaments } = globalState;
+  const { reglaments, reglamentTypes: types } = globalState;
   return (
     <div className="flex flex-col overflow-hidden gap-3">
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
@@ -54,7 +55,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={"license_plate"}>license plate</SelectItem>
-              <SelectItem value={"city"}>city</SelectItem>
+              {/* <SelectItem value={"city"}>city</SelectItem> */}
               <SelectItem value={"reglamentType"}>reglamentType</SelectItem>
             </SelectContent>
           </Select>
@@ -67,10 +68,39 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
           </Button>
         </div>
         <div className="flex gap-3">
-          <Input
-            placeholder="Search..."
-            onChange={(e) => setFilter(e.target.value)}
-          />
+          {filterType === "reglamentType" ? (
+            <Select
+              onValueChange={(val: string) => setReglament_type_id(Number(val))}
+              value={String(reglament_type_id)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {types!.map((type) => {
+                  return (
+                    <SelectItem
+                      key={`ReglamentSelectionTable-select-type-${type.id}`}
+                      value={String(type.id)}
+                    >
+                      {type.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          ) : (
+            <Input
+              placeholder="Search..."
+              onChange={(e) =>
+                setFilter(
+                  convertCyrillicToLatinLicensePlate(
+                    e.target.value
+                  ).toUpperCase()
+                )
+              }
+            />
+          )}
 
           <NewReglamentDialog
             cb={async () => {
@@ -80,7 +110,6 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
         </div>
       </div>
       <Table className="w-full ">
-        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px] font-black">Номер авто</TableHead>
@@ -92,15 +121,18 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
         <TableBody className="overflow-y-auto">
           {reglaments!
             .filter((reglament) => {
-              // if (filterType === "license_plate") {
-              //   return reglament.license_plate.includes(filter);
-              // }
+              if (filterType === "license_plate") {
+                return reglament.license_plate.includes(filter);
+              }
               // if (filterType === "city") {
               //   return reglament.city.includes(filter);
               // }
-              // if (filterType === "reglamentType") {
-              //   return reglament.reglament_type_name.includes(filter);
-              // }
+              if (filterType === "reglamentType") {
+                if (!reglament_type_id) {
+                  return true;
+                }
+                return reglament.reglament_type_id == String(reglament_type_id);
+              }
               return true;
             })
             .map((reglament, i) => (
@@ -113,10 +145,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
             ))}
         </TableBody>
         <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
+          <TableRow></TableRow>
         </TableFooter>
       </Table>
     </div>
