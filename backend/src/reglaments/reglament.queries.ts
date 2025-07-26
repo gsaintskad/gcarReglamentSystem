@@ -76,7 +76,7 @@ export const assignReglamentToCar = async (
 export const getCarReglaments = async (): Promise<
   reglamentTypes.carReglamentDto[]
 > => {
-  const sql = /*sql*/ `select * from cars_to_reglaments`;
+  const sql = /*sql*/ `select * from cars_to_reglaments WHERE is_active = true`;
   const result = await reglamentPool.query(sql);
   const { rows } = result;
   return rows as reglamentTypes.carReglamentDto[];
@@ -101,7 +101,7 @@ export const updateCarReglament = async (
     dto.comment,
     dto.reglament_type_id,
     dto.telegram_id, // This will be $5
-    dto.id,          // This will be $6
+    dto.id, // This will be $6
   ];
   devLog("Updating car reglament...", sql, params);
   await reglamentPool.query(sql, params);
@@ -121,7 +121,7 @@ export const markCarReglamentAsIncactive = async (
   `;
   const params = [
     id,
-    telegram_id // This will be $2
+    telegram_id, // This will be $2
   ];
   devLog("Marking car reglament as inactive...", sql, params);
   await reglamentPool.query(sql, params);

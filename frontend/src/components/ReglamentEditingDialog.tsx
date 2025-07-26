@@ -37,7 +37,10 @@ import api from "@/api/reglamentSystem.api";
 import { reglamentStateBgColors, reglamentStateColors } from "./constants";
 import { bg } from "date-fns/locale";
 import { getMyTaxiCarActualMileage } from "@/utils/myTaxi.utils";
-import { updateCarReglament } from "@/utils/reglament.utils";
+import {
+  deleteCarReglament,
+  updateCarReglament,
+} from "@/utils/reglament.utils";
 interface ReglamentEditingDialogProps {
   reglament: carReglamentDto;
   cb: () => Promise<any>;
@@ -152,8 +155,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             variant={"destructive"}
             onClick={async () => {
               await deleteCarReglament(
-                reglament.id,
-                12345//telegram_id
+                Number(reglament.id),
+                12345 //telegram_id
               );
               window.location.reload();
             }}

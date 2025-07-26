@@ -18,11 +18,7 @@ export const getCarReglaments = async () => {
   const { carReglaments } = data;
   return carReglaments as reglamentTypes.carReglamentDto[];
 };
-export const deleteCarReglament = async (id: number) => {
-  const response = await api.delete(`/reglaments/cars?id=${id}`);
-  const { data } = response;
-  return true;
-};
+
 export const updateCarReglament = async (
   dto: {
     comment: string;
@@ -35,6 +31,13 @@ export const updateCarReglament = async (
 ) => {
   const { id } = reglament;
   const response = await api.put(`/reglaments/cars`, { ...dto, id });
+  const { data } = response;
+  return true;
+};
+export const deleteCarReglament = async (id: number, telegram_id: number) => {
+  const response = await api.delete(
+    `/reglaments/cars?id=${id}&telegram_id=${telegram_id}`
+  );
   const { data } = response;
   return true;
 };
