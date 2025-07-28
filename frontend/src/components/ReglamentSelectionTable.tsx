@@ -114,8 +114,8 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
           <TableRow>
             <TableHead className="w-[100px] font-black">Номер авто</TableHead>
             <TableHead>Тип Регламенту</TableHead>
-            <TableHead className="text-center">Дедлайн (км)</TableHead>
-            <TableHead className="text-center">Нагадати за (км):</TableHead>
+            <TableHead className="text-center">Залишок пробігу (км)</TableHead>
+ 
           </TableRow>
         </TableHeader>
         <TableBody className="overflow-y-auto">

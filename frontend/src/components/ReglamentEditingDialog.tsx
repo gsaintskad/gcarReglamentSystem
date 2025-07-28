@@ -127,6 +127,10 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       reglament_type_description: type!.description,
     };
   }, [reglament_type_id, types]);
+  const mileageLeftOver = useMemo(() => {
+    if (!actualMileage || !mileage_deadline) return 0;
+    return mileage_deadline - (actualMileage-reglament.mileage_stamp)/1000;
+  }, [actualMileage, mileage_deadline]);
   // console.log({ reglament, progress, progress_color, bg_color });
   return actualMileage ? (
     <Dialog>
@@ -135,9 +139,9 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           <TableCell className="font-medium">{license_plate}</TableCell>
 
           <TableCell className="font-medium ">{reglament_type_name}</TableCell>
-          <TableCell className="text-center">{mileage_deadline}</TableCell>
+  
           <TableCell className="text-center">
-            {mileage_before_deadline_to_remember}
+            {mileageLeftOver}
           </TableCell>
         </TableRow>
       </DialogTrigger>
