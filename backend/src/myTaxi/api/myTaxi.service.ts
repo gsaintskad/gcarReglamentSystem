@@ -1,4 +1,4 @@
-import * as myTaxiRepo from "../myTaxi.utils.js";
+import * as myTaxiRepo from "../myTaxi.queries.js";
 import * as myTaxiTypes from "../myTaxi.types.js";
 // export const getCars = async () => {
 //   const { rows: cars }: { rows: myTaxiTypes.getCarsJson[] } =
@@ -17,4 +17,13 @@ export const getMyTaxiCarActualMileageHandler = async (car_id: string) => {
   const { rows } = await myTaxiRepo.getMyTaxiCarActualMileage(car_id);
   const [car] = rows;
   return car.actual_mileage;
+};
+export const getMyTaxiCarActualMileagesHandler = async (car_ids: string[]) => {
+  const { rows:actualMileages } = await myTaxiRepo.getMyTaxiCarActualMileages(car_ids);
+  
+  return actualMileages.reduce((acc,curr)=>{
+    acc[curr.car_id] = curr.actual_mileage
+
+    return acc
+  },{});
 };

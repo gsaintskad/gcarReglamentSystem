@@ -39,3 +39,17 @@ export const getMyTaxiCarActualMileage = async (car_id: string) => {
   const { rows, rowCount } = result;
   return { rows };
 };
+export const getMyTaxiCarActualMileages = async (car_ids: string[]) => { 
+  const sqlFilePath = join(
+    process.cwd(),
+    "src",
+    "myTaxi",
+    "sql",
+    "getActualCarMileages.sql"
+  );
+  const sql = fs.readFileSync(sqlFilePath).toString();
+  devLog(sql);
+  const result = await myTaxiPool.query(sql, [car_ids]);
+  const { rows, rowCount } = result;
+  return { rows };
+}

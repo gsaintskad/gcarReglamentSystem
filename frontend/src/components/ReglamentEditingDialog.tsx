@@ -50,6 +50,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
 ) => {
   const { reglament } = props;
 
+  const { globalState } = useMainContext();
+  const { reglamentTypes: types, actualMileageMap } = globalState;
   const { car_id, auto_park_id, mileage_stamp, license_plate } = reglament;
   const [reglament_type_id, setReglament_type_id] = useState<number>(
     Number(reglament.reglament_type_id)
@@ -57,7 +59,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const [mileage_deadline, setMileage_deadline] = useState<number>(
     reglament.mileage_deadline
   );
-  const [actualMileage, setActualMileage] = useState<number>();
+  const [actualMileage, setActualMileage] = useState<number>(Number(actualMileageMap![car_id]));
   const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
     useState<boolean>(false);
   const [
@@ -70,18 +72,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   //   setActualMileage(mileage);
   //   console.log({ actualMileage, mileage });
   // });
-  useEffect(() => {
-    (async () => {
-      const mileage = await getMyTaxiCarActualMileage(car_id);
-
-      setActualMileage(mileage);
-    })();
-  }, [car_id]);
 
   const { progress, progress_color, bg_color } = useMemo(() => {
     let progress = Math.floor(
       ((actualMileage! - reglament.mileage_stamp) / (mileage_deadline * 1000)) *
-        100
+      100
     );
     if (mileage_deadline == 0) {
       progress = 100;
@@ -89,7 +84,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     const notify_marker = Math.floor(
       ((mileage_deadline - mileage_before_deadline_to_remember) /
         mileage_deadline) *
-        100
+      100
     );
     let progress_color;
     let bg_color;
@@ -115,8 +110,6 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     mileage_before_deadline_to_remember,
     mileage_deadline,
   ]);
-  const { globalState } = useMainContext();
-  const { reglamentTypes: types } = globalState;
   const { reglament_type_name, reglament_type_description } = useMemo<{
     reglament_type_name: string;
     reglament_type_description: string;
@@ -129,7 +122,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   }, [reglament_type_id, types]);
   const mileageLeftOver = useMemo(() => {
     if (!actualMileage || !mileage_deadline) return 0;
-    return mileage_deadline - (actualMileage-reglament.mileage_stamp)/1000;
+    return mileage_deadline - (actualMileage - reglament.mileage_stamp) / 1000;
   }, [actualMileage, mileage_deadline]);
   // console.log({ reglament, progress, progress_color, bg_color });
   return actualMileage ? (
@@ -139,7 +132,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           <TableCell className="font-medium">{license_plate}</TableCell>
 
           <TableCell className="font-medium ">{reglament_type_name}</TableCell>
-  
+
           <TableCell className="text-center">
             {mileageLeftOver}
           </TableCell>

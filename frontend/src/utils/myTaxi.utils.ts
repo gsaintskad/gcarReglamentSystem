@@ -24,3 +24,10 @@ export const updateCarReglament = async (dto: {
 }) => {
   const response = await api.put(`/reglaments/cars`, dto);
 };
+export const getMyTaxiCarActualMileages = async (car_ids: string[]) => {
+  const response = await api.post(`/myTaxi/mileage`, car_ids);
+  console.log(response);
+  const { mileages } = response.data;
+  return mileages;
+
+}

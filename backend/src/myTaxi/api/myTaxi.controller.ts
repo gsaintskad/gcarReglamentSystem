@@ -38,7 +38,7 @@ export const getMyTaxiCarActualMileageEndpoint = async (
 ) => {
   try {
     devLog("Getting cars...");
-    
+
     const { car_id } = req.query;
     if (!car_id) {
       return res.status(400).json({ message: "Car id is required" });
@@ -52,3 +52,23 @@ export const getMyTaxiCarActualMileageEndpoint = async (
     res.status(500).json({ message: "An unexpected error occurred" });
   }
 };
+export const getMyTaxiCarActualMileagesEndpoint = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    devLog("Getting cars...");
+    console.log(req.body)
+    const  car_ids  = req.body
+    if (!car_ids) {
+      return res.status(400).json({ message: "Car ids are required" });
+    }
+    const mileages = await myTaxiService.getMyTaxiCarActualMileagesHandler(
+      car_ids
+    );
+    res.status(200).json({ mileages });
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    res.status(500).send('An unexpected error occurred');
+  }
+}
