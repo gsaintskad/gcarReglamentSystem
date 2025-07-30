@@ -9,4 +9,4 @@ RUN npm install
 
 COPY . .
 
-ENTRYPOINT ["/bin/sh", "-c", "npx knex --knexfile knexfile.ts migrate:latest --debug && npm run start:prod"]
+ENTRYPOINT ["/bin/sh", "-c", "npm run migrate:latest && npm run start:prod"]

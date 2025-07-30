@@ -1,27 +1,43 @@
 # docker-compose.yml
 version: '3.8' # Use a recent version for latest features
-
+networks:
+  m_net: # Defines a custom bridge network named 'm_net'
+    driver: bridge
 services:
+  nginx:
+    image: nginx:latest
+    ports:
+      # Map host port to Nginx's HTTP port, taken from .env
+      - "${NGINX_HTTP_PORT}:${NGINX_HTTP_PORT}"
+      # Map host port to Nginx's internal DB proxy port, taken from .env
+      - "5434:${NGINX_DB_PROXY_PORT}" # Host port 5434 for Nginx's DB proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - app
+      - db
+    restart: always
+    environment:
+      # Pass these environment variables directly to the Nginx container
+      NGINX_HTTP_PORT: ${NGINX_HTTP_PORT}
+      NGINX_DB_PROXY_PORT: ${NGINX_DB_PROXY_PORT}
+      FRONTEND_INTERNAL_PORT: ${FRONTEND_INTERNAL_PORT}
+      BACKEND_INTERNAL_PORT: ${BACKEND_INTERNAL_PORT}
   db:
     image: postgres:14-alpine # Or your preferred database image (mysql, mongo, etc.)
     restart: always
     environment:
-      # Use the GCAR_PG_ variables directly for the PostgreSQL container
-      # These will be picked up from the .env file that docker-compose automatically loads
-      # from the root directory, or if you explicitly define them here.
-      # For simplicity, we assume the root .env or a shared .env will provide these.
-      # If your backend/.env is the *only* source, you might need to duplicate these
-      # or ensure a shared .env has them. For now, let's assume the root .env has them,
-      # or they are passed via the command line for the db service.
-      # However, for the app to connect, it will use the backend/.env values.
       POSTGRES_USER: ${GCAR_PG_USER}
       POSTGRES_PASSWORD: ${GCAR_PG_PASSWORD}
       POSTGRES_DB: ${GCAR_PG_DB}
     volumes:
-      - db_data:/var/lib/postgresql/data # Persistent data volume
+      - db_data:/var/lib/postgresql/data 
+    networks:
+      - m_net      
     ports:
-      - "5433:5432" # Expose container's 5432 to host's 5433, matching GCAR_PG_PORT
-    healthcheck: # Added healthcheck to ensure DB is ready
+      - "5433:5432" # 
+    healthcheck: 
       test: ["CMD-SHELL", "pg_isready -U ${GCAR_PG_USER} -d ${GCAR_PG_DB}"]
       interval: 5s
       timeout: 5s
@@ -32,12 +48,21 @@ services:
     restart: always
     ports:
       - "${PORT}:${PORT}" # Maps host_port:container_port
-    # Pass the entire backend/.env file to the app container
+    networks:
+      - m_net    
+      # Pass the entire backend/.env file to the app container
     env_file:
       - ./backend/.env # Pointing to the .env file within the backend directory
     depends_on:
       db:
         condition: service_healthy # Ensure app starts only after db is healthy
-
+  frontend:
+    build: ./frontend
+    restart: always
+    depends_on:
+      - app
+    networks:
+      - m_net
+  
 volumes:
   db_data:

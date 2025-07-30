@@ -98,6 +98,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       bg_color = reglamentStateBgColors.new;
       progress_color = reglamentStateColors.new;
     }
+    console.log({
+      progress,
+      progress_color,
+      bg_color,
+    })
     return {
       progress,
       progress_color,
