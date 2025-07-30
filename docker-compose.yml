@@ -8,9 +8,9 @@ services:
     image: nginx:latest
     ports:
       # Map host port to Nginx's HTTP port, taken from .env
-      - "${NGINX_HTTP_PORT}:${NGINX_HTTP_PORT}"
+      - "80:80"
       # Map host port to Nginx's internal DB proxy port, taken from .env
-      - "5434:${NGINX_DB_PROXY_PORT}" # Host port 5434 for Nginx's DB proxy
+      - "5434:5433" # Host port 5434 for Nginx's DB proxy
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -18,12 +18,9 @@ services:
       - app
       - db
     restart: always
-    environment:
-      # Pass these environment variables directly to the Nginx container
-      NGINX_HTTP_PORT: ${NGINX_HTTP_PORT}
-      NGINX_DB_PROXY_PORT: ${NGINX_DB_PROXY_PORT}
-      FRONTEND_INTERNAL_PORT: ${FRONTEND_INTERNAL_PORT}
-      BACKEND_INTERNAL_PORT: ${BACKEND_INTERNAL_PORT}
+    
+    networks: # Explicitly add nginx to the custom network
+      - m_net
   db:
     image: postgres:14-alpine # Or your preferred database image (mysql, mongo, etc.)
     restart: always
@@ -60,7 +57,7 @@ services:
     build: ./frontend
     restart: always
     depends_on:
-      - app
+      - app # Changed from 'app:' to '- app' to fix the mapping error
     networks:
       - m_net
   
