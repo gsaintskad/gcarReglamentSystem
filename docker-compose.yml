@@ -2,38 +2,42 @@
 version: '3.8' # Use a recent version for latest features
 
 services:
-  pgdb:
+  db:
     image: postgres:14-alpine # Or your preferred database image (mysql, mongo, etc.)
     restart: always
     environment:
+      # Use the GCAR_PG_ variables directly for the PostgreSQL container
+      # These will be picked up from the .env file that docker-compose automatically loads
+      # from the root directory, or if you explicitly define them here.
+      # For simplicity, we assume the root .env or a shared .env will provide these.
+      # If your backend/.env is the *only* source, you might need to duplicate these
+      # or ensure a shared .env has them. For now, let's assume the root .env has them,
+      # or they are passed via the command line for the db service.
+      # However, for the app to connect, it will use the backend/.env values.
       POSTGRES_USER: ${GCAR_PG_USER}
       POSTGRES_PASSWORD: ${GCAR_PG_PASSWORD}
       POSTGRES_DB: ${GCAR_PG_DB}
     volumes:
       - db_data:/var/lib/postgresql/data # Persistent data volume
     ports:
-      - "5433:5432" # Expose the database port to your host (optional, for direct connection)
+      - "5433:5432" # Expose container's 5432 to host's 5433, matching GCAR_PG_PORT
+    healthcheck: # Added healthcheck to ensure DB is ready
+      test: ["CMD-SHELL", "pg_isready -U ${GCAR_PG_USER} -d ${GCAR_PG_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  # app: # Your application service (e.g., Node.js with Knex)
-  #   build: . # Or image: your_app_image
-  #   restart: always
-  #   ports:
-  #     - "3000:3000" # Example port for your app
-  #   environment:
-  #     # DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
-  #     # # Or individual variables for your app to pick up:
-  #     DB_HOST: ${GCAR_DB_HOST}
-  #     DB_PORT: ${GCAR_DB_PORT}
-  #     DB_USER: ${GCAR_DB_USER}
-  #     DB_PASSWORD: ${GCAR_DB_PASSWORD}
-  #     DB_NAME: ${GCAR_DB_NAME}
-  #   depends_on:
-  #     - db # Ensures db starts before app
-    # If your app uses Knex and needs to run migrations/seeds inside the container
-    # Consider an entrypoint script or running commands explicitly:
-    # entrypoint: ["/bin/sh", "-c", "npm install && npm run migrate:latest && npm start"]
-    # This might be more complex if you have separate build/run stages.
-    # For development, you often run migrations from your host.
+  app: # Your application service (e.g., Node.js with Knex)
+    build: ./backend # Or image: your_app_image
+    restart: always
+    ports:
+      - "${PORT}:${PORT}" # Maps host_port:container_port
+    # Pass the entire backend/.env file to the app container
+    env_file:
+      - ./backend/.env # Pointing to the .env file within the backend directory
+    depends_on:
+      db:
+        condition: service_healthy # Ensure app starts only after db is healthy
 
 volumes:
   db_data:
