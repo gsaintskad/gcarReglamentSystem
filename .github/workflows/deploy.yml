@@ -1,0 +1,18 @@
+deploy_to_production:
+
+  steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          
+          cd /path/to/your/gcarReglamentSystem
+
+          docker compose down
+
+          git pull origin main
+
+          docker compose up -d --remove-orphans --force-recreate
