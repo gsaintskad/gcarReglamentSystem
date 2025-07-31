@@ -14,7 +14,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             
-            cd /path/to/your/gcarReglamentSystem
+            cd /home/githubcicd/gcarReglamentSystem
 
             docker compose down
 
