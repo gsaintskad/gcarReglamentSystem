@@ -127,7 +127,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   }, [reglament_type_id, types]);
   const mileageLeftOver = useMemo(() => {
     if (!actualMileage || !mileage_deadline) return 0;
-    return mileage_deadline - Math.floor(actualMileage - reglament.mileage_stamp) / 1000;
+    return mileage_deadline - Math.floor((actualMileage - reglament.mileage_stamp)/100) / 10;
   }, [actualMileage, mileage_deadline]);
   // console.log({ reglament, progress, progress_color, bg_color });
   return actualMileage ? (
