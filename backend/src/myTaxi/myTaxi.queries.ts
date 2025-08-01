@@ -68,7 +68,7 @@ export const getActualMyTaxiCarList = async (last_actualization: Date) => {
     "getActualCarList.sql",
   );
 
-  const sql = fs.readFileSync(sqlFilePath).toString()
+  const sql = fs.readFileSync(sqlFilePath).toString();
 
   const result = await myTaxiPool.query(sql, [last_actualization]);
   const { rows, rowCount } = result;

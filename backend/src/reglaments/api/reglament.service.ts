@@ -35,3 +35,7 @@ export const markCarReglamentAsIncactiveHandler = async (
   await reglamentRepo.markCarReglamentAsIncactive(id, telegram_id);
   return true;
 };
+export const getAvailableCarListHandler = async () => {
+  const availableCars = await reglamentRepo.getAvailableCarList();
+  return { availableCars };
+};

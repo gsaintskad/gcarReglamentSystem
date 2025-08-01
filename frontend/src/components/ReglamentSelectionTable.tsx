@@ -45,7 +45,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   return (
     <div className="flex flex-col overflow-hidden gap-3">
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
-        <div className="flex items-center flex-nowrap gap-5">
+        <div className="flex items-center flex-nowrap gap-3">
           <Label className="text-nowrap">{shared.searchBy}:</Label>
           <Select
             onValueChange={(val: string) => setFilterType(val)}

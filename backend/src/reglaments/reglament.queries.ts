@@ -129,11 +129,19 @@ export const markCarReglamentAsIncactive = async (
 export const getLastCarAcutalization = async (): Promise<Date | null> => {
   const sql = /*sql*/ `
     SELECT MAX(last_actualization) FROM cars;
-  `
+  `;
   const result = await reglamentPool.query(sql);
   const { rows } = result;
   const [row] = rows as [{ max: Date }];
   const { max: last_actualization } = row;
   return last_actualization;
-
-}
+};
+export const getAvailableCarList = async (): Promise<
+  reglamentTypes.AvailableCar[]
+> => {
+  const sql = /*sql*/ `
+    SELECT cars.car_id, cars.license_plate, cars.actual_mileage, cars.last_actualization, cars.auto_park_id FROM cars
+    `;
+  const { rows } = await reglamentPool.query(sql);
+  return rows as reglamentTypes.AvailableCar[];
+};
