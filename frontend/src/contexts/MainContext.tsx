@@ -26,7 +26,6 @@ import * as languages from "@/i18n";
 interface GlobalState {
   reglaments: carReglamentDto[] | undefined;
   reglamentTypes: reglamentType[] | undefined;
-  actualMileageMap: { [key: string]: string } | undefined;
   i18n: i18nLanguageType | undefined;
   chosenLanguage: maintainedLanguages | undefined;
   availableCarList: AvailableCar[];
@@ -47,7 +46,6 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   const [globalState, setGlobalState] = useState<GlobalState>({
     // cars: undefined,
     reglaments: undefined,
-    actualMileageMap: undefined,
     reglamentTypes: undefined,
     i18n: languages.en,
     chosenLanguage: "en",
@@ -67,12 +65,11 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       const actualMileageMap: { [key: string]: string } =
         await getMyTaxiCarActualMileages(Array.from(uniqueCars));
       const availableCarList = await getAvailableCarList();
-      console.log(availableCarList);
+     
       setGlobalState({
         ...structuredClone(globalState),
         reglaments,
         reglamentTypes,
-        actualMileageMap,
         availableCarList,
       });
     }
