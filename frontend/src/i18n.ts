@@ -61,7 +61,7 @@ export const uk:i18nLanguageType = {
     buttons: {
         save: "Зберегти",
         delete: "Видалити",
-        reload: "Перезавантажити",
+        reload: "Оновити",
         create: 'Створити',
         edit: 'Редагувати',
         saveChanges: 'Зберегти зміни',
