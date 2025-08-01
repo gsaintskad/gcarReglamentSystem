@@ -36,9 +36,9 @@ function App() {
 
   return (
     <div className="flex flex-col  items-center py-10 h-screen w-full max-sm:max-w-sm  max-sm:translate-x-1 ">
-      <div className="md:w-2/3">
-        <div className="flex justify-between   items-center">
-          <Label> WELCOME TO MAINTENANCE NOTIFICATIONS 😎</Label>
+      <div className="w-full md:w-2/3">
+        <div className="flex justify-between items-center">
+          <Label>MAINTENANCE NOTIFICATIONS 😎</Label>
           <Select
             onValueChange={(val: maintainedLanguages) => setLanguage(val)}
             value={language}

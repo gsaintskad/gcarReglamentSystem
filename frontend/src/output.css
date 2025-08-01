@@ -657,18 +657,9 @@ body {
   z-index: 50;
 }
 
-.m-auto {
-  margin: auto;
-}
-
 .-mx-1 {
   margin-left: -0.25rem;
   margin-right: -0.25rem;
-}
-
-.mx-3 {
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
 }
 
 .my-1 {
@@ -978,6 +969,10 @@ body {
 
 .gap-5 {
   gap: 1.25rem;
+}
+
+.gap-y-2 {
+  row-gap: 0.5rem;
 }
 
 .space-y-1\.5 > :not([hidden]) ~ :not([hidden]) {
