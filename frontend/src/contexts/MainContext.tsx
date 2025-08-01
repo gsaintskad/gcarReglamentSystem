@@ -10,11 +10,13 @@ import React, {
 } from "react";
 import { getCarReglaments, getReglamentTypes } from "@/utils/reglament.utils";
 import { getMyTaxiCarActualMileage, getMyTaxiCarActualMileages } from "@/utils/myTaxi.utils";
-
+import { i18nLanguageType } from "@/i18n";
+import * as languages from "@/i18n";
 interface GlobalState {
   reglaments: carReglamentDto[] | undefined;
   reglamentTypes: reglamentType[] | undefined;
   actualMileageMap: { [key: string]: string } | undefined;
+  i18n: i18nLanguageType | undefined;
 }
 
 interface MainContextType {
@@ -34,6 +36,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     reglaments: undefined,
     actualMileageMap: undefined,
     reglamentTypes: undefined,
+    i18n: undefined,
   });
 
   useEffect(() => {
@@ -48,7 +51,8 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       }, new Set<string>())
       const actualMileageMap: { [key: string]: string } = await getMyTaxiCarActualMileages(Array.from(uniqueCars))
       console.log(actualMileageMap);
-      setGlobalState({ reglaments, reglamentTypes, actualMileageMap });
+      const i18n = languages.uk
+      setGlobalState({ reglaments, reglamentTypes, actualMileageMap, i18n });
     }
     fetchCarsAndReglamentTypes();
   }, []);

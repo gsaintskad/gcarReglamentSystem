@@ -51,7 +51,8 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const { reglament } = props;
 
   const { globalState } = useMainContext();
-  const { reglamentTypes: types, actualMileageMap } = globalState;
+  const { reglamentTypes: types, actualMileageMap, i18n } = globalState;
+  const { shared: sharedI18n, buttons: buttonsI18n, placeHolders: placeHoldersI18n, editReglament: editReglamentI18n } = i18n!
   const { car_id, auto_park_id, mileage_stamp, license_plate } = reglament;
   const [reglament_type_id, setReglament_type_id] = useState<number>(
     Number(reglament.reglament_type_id)
@@ -147,10 +148,10 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       <DialogContent className="h-3/4">
         <DialogHeader>
           <DialogTitle>
-            Регламент {reglament_type_name} авто {license_plate}
+            {sharedI18n.reglament} {license_plate} #{reglament.id!}
           </DialogTitle>
           <DialogDescription>
-            Тут можна переглянути та внести зміни до регламентів машини
+            {editReglamentI18n.description}
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-between gap-3">
@@ -165,7 +166,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             }}
             className="w-1/2"
           >
-            Delete
+            {buttonsI18n.delete}
           </Button>
           <Button
             variant={"outline"}
@@ -189,11 +190,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             }}
             className="w-1/2"
           >
-            {isEditingModeTurnedOn ? "save" : "Edit"}
+            {isEditingModeTurnedOn ? buttonsI18n.save : buttonsI18n.edit}
           </Button>
         </div>
         <div className="grid grid-cols-2 gap-3 ">
-          <Label>Тип регламенту</Label>
+          <Label>{sharedI18n.reglamentType}:</Label>
 
           {isEditingModeTurnedOn ? (
             <Select
@@ -219,7 +220,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           ) : (
             <Label>{reglament_type_name}</Label>
           )}
-          <Label>Deadline</Label>
+          <Label>{sharedI18n.notifyAfter} (KM):</Label>
           {isEditingModeTurnedOn ? (
             <Input
               defaultValue={mileage_deadline}
@@ -229,7 +230,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             <Label>{mileage_deadline}</Label>
           )}
 
-          <Label>Нагадати за:</Label>
+          <Label>{sharedI18n.notifyBeforeCompletion} (KM):</Label>
           {isEditingModeTurnedOn ? (
             <Input
               defaultValue={mileage_before_deadline_to_remember}
@@ -241,7 +242,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             <Label>{mileage_before_deadline_to_remember}</Label>
           )}
 
-          <Label>Коментар:</Label>
+          <Label>{sharedI18n.comment}:</Label>
 
           {isEditingModeTurnedOn ? (
             <Input
@@ -251,7 +252,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           ) : (
             <Label>{comment}</Label>
           )}
-          <Label>Прогресс</Label>
+          <Label>{sharedI18n.progress}:</Label>
           <Label>{progress}%</Label>
         </div>
         <div className="h-32 flex items-center justify-center ">
@@ -291,7 +292,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
                 window.location.reload();
               }}
             >
-              Save changes
+              {buttonsI18n.saveChanges}
             </Button>
           </DialogClose>
         </DialogFooter>

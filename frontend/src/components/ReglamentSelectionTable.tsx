@@ -31,7 +31,7 @@ import { carReglamentDto } from "@/types/reglament.types";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import useMainContext from "@/contexts/MainContext";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
-interface ReglamentSelectionTableProps {}
+interface ReglamentSelectionTableProps { }
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   props: ReglamentSelectionTableProps
@@ -40,12 +40,13 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   const [filterType, setFilterType] = useState("license_plate");
   const [reglament_type_id, setReglament_type_id] = useState<number>(0);
   const { globalState, setGlobalState } = useMainContext();
-  const { reglaments, reglamentTypes: types } = globalState;
+  const { reglaments, reglamentTypes: types, i18n } = globalState;
+  const { buttons, placeHolders, shared } = i18n!
   return (
     <div className="flex flex-col overflow-hidden gap-3">
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
         <div className="flex items-center flex-nowrap gap-5">
-          <Label className="text-nowrap">Пошук по:</Label>
+          <Label className="text-nowrap">{shared.searchBy}:</Label>
           <Select
             onValueChange={(val: string) => setFilterType(val)}
             value={filterType}
@@ -54,9 +55,9 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={"license_plate"}>license plate</SelectItem>
+              <SelectItem value={"license_plate"}>{shared.licensePlate}</SelectItem>
               {/* <SelectItem value={"city"}>city</SelectItem> */}
-              <SelectItem value={"reglamentType"}>reglamentType</SelectItem>
+              <SelectItem value={"reglamentType"}>{shared.reglamentType}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -64,7 +65,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
             onClick={() => window.location.reload()}
             className="block md:hidden"
           >
-            Reload
+            {buttons.reload}
           </Button>
         </div>
         <div className="flex gap-3">
@@ -74,7 +75,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               value={String(reglament_type_id)}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder={placeHolders.reglamentTypeSelect} />
               </SelectTrigger>
               <SelectContent>
                 {types!.map((type) => {
@@ -91,7 +92,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
             </Select>
           ) : (
             <Input
-              placeholder="Search..."
+              placeholder={placeHolders.search}
               onChange={(e) =>
                 setFilter(
                   convertCyrillicToLatinLicensePlate(
@@ -112,10 +113,10 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
       <Table className="w-full ">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] font-black">Номер авто</TableHead>
-            <TableHead>Тип Регламенту</TableHead>
-            <TableHead className="text-center">Залишок пробігу (км)</TableHead>
- 
+            <TableHead className="w-[100px] font-black">{shared.licensePlate}</TableHead>
+            <TableHead>{shared.reglamentType}</TableHead>
+            <TableHead className="text-center">{shared.remainingMileage} (KM)</TableHead>
+
           </TableRow>
         </TableHeader>
         <TableBody className="overflow-y-auto">

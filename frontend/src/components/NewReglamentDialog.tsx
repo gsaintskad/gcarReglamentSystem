@@ -83,7 +83,8 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     car,
   ]);
   const { globalState } = useMainContext();
-  const { reglamentTypes: types } = globalState;
+  const { reglamentTypes: types, i18n } = globalState;
+  const { buttons: buttonsI18n, shared: sharedI18n, newReglament: newReglamentI18n, placeHolders: placeHoldersI18n } = i18n!
   const getAndSaveCarbyLicencePlate = useCallback(
     async (license_plate: string) => {
       const car = await getMyTaxiCarByLicensePlate(license_plate);
@@ -95,17 +96,17 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-1/2">NEW Reglament</Button>
+        <Button className="w-1/2">{buttonsI18n.newReglament}</Button>
       </DialogTrigger>
       <DialogContent className="h-3/4">
         <DialogHeader>
-          <DialogTitle>Регламенти машини</DialogTitle>
+          <DialogTitle>{newReglamentI18n.title}</DialogTitle>
           <DialogDescription>
-            Тут можна переглянути та внести зміни до регламентів машини
+            {newReglamentI18n.description}
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 ">
-          <Label>license plate: </Label>
+          <Label>{sharedI18n.licensePlate}: </Label>
           <div className="flex flex-col gap-3">
             <div className="flex gap-3">
               <Input
@@ -140,7 +141,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               )}
             </Label>
           </div>
-          <Label>Тип регламенту</Label>
+          <Label>{sharedI18n.reglamentType}:</Label>
           <Select
             onValueChange={(val: string) => setReglament_type_id(Number(val))}
             disabled={!is_car_found}
@@ -162,14 +163,14 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
             </SelectContent>
           </Select>
 
-          <Label>Deadline(km): </Label>
+          <Label>{sharedI18n.notifyAfter}(KM): </Label>
           <Input
             disabled={!is_car_found}
             onChange={(e) => setMileage_deadline(Number(e.target.value))}
             placeholder="15000"
           ></Input>
 
-          <Label>Нагадати за (km):</Label>
+          <Label>{sharedI18n.notifyBeforeCompletion}(KM):</Label>
           <Input
             disabled={!is_car_found}
             onChange={(e) =>
@@ -177,11 +178,11 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
             }
             placeholder="1000"
           ></Input>
-          <Label>Коментар:</Label>
+          <Label>{sharedI18n.comment}:</Label>
           <Input
             disabled={!is_car_found}
             onChange={(e) => setComment(String(e.target.value))}
-            placeholder="Учтонення інформації..."
+            placeholder={placeHoldersI18n.commentInput}
           ></Input>
         </div>
 
@@ -200,7 +201,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 cb();
               }}
             >
-              Create reglament
+              {buttonsI18n.create}
             </Button>
           </DialogClose>
         </DialogFooter>
