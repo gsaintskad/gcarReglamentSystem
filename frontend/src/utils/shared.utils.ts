@@ -1,5 +1,5 @@
 export function convertCyrillicToLatinLicensePlate(
-  cyrillicPlate: string
+  cyrillicPlate: string,
 ): string {
   // Define the mapping from uppercase Cyrillic to Latin characters commonly used in license plates.
   // Only characters that have a direct visual or phonetic equivalent used in

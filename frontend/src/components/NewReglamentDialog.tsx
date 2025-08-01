@@ -84,14 +84,19 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   ]);
   const { globalState } = useMainContext();
   const { reglamentTypes: types, i18n } = globalState;
-  const { buttons: buttonsI18n, shared: sharedI18n, newReglament: newReglamentI18n, placeHolders: placeHoldersI18n } = i18n!
+  const {
+    buttons: buttonsI18n,
+    shared: sharedI18n,
+    newReglament: newReglamentI18n,
+    placeHolders: placeHoldersI18n,
+  } = i18n!;
   const getAndSaveCarbyLicencePlate = useCallback(
     async (license_plate: string) => {
       const car = await getMyTaxiCarByLicensePlate(license_plate);
       car.actual_mileage = Number(car.actual_mileage);
       setCar(car as licensePlateCheckedCar);
     },
-    [license_plate]
+    [license_plate],
   );
   return (
     <Dialog>
@@ -101,9 +106,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
       <DialogContent className="h-3/4 max-sm:max-w-sm ">
         <DialogHeader>
           <DialogTitle>{newReglamentI18n.title}</DialogTitle>
-          <DialogDescription>
-            {newReglamentI18n.description}
-          </DialogDescription>
+          <DialogDescription>{newReglamentI18n.description}</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 ">
           <Label>{sharedI18n.licensePlate}: </Label>

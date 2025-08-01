@@ -7,5 +7,5 @@ import { MainProvider } from "./contexts/MainContext.tsx"; // Already correct
 createRoot(document.getElementById("root")!).render(
   <MainProvider>
     <App />
-  </MainProvider>
+  </MainProvider>,
 );
