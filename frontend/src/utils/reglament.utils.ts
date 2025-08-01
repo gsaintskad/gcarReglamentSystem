@@ -45,3 +45,7 @@ export const getAvailableCarList = async () => {
   const { data } = await api.get(`/reglaments/cars/available`);
   return data.data as reglamentTypes.AvailableCar[];
 };
+export const getAutoParks = async () => {
+  const { data } = await api.get(`/myTaxi/auto-parks`);
+  return data.data as reglamentTypes.AutoPark[];
+};

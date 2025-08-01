@@ -31,7 +31,33 @@ import { carReglamentDto } from "@/types/reglament.types";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import useMainContext from "@/contexts/MainContext";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
-interface ReglamentSelectionTableProps {}
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+export interface AvailableCar{
+  car_id:string,
+  license_plate:string,
+  actual_mileage:number,
+  last_actualization:Date,
+  auto_park_id:string,
+}
+export interface AutoPark {
+  id: string,
+  name: string
+}
+interface ReglamentSelectionTableProps { }
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   props: ReglamentSelectionTableProps,
@@ -40,8 +66,13 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   const [filterType, setFilterType] = useState("license_plate");
   const [reglament_type_id, setReglament_type_id] = useState<number>(0);
   const { globalState, setGlobalState } = useMainContext();
-  const { reglaments, reglamentTypes: types, i18n } = globalState;
+  const { reglaments, reglamentTypes: types, i18n, autoParks } = globalState;
   const { buttons, placeHolders, shared } = i18n!;
+  
+  // State for the auto park combobox
+  const [openAutoPark, setOpenAutoPark] = useState(false);
+  const [selectedAutoPark, setSelectedAutoPark] = useState<AutoPark | undefined>();
+  
   return (
     <div className="flex flex-col overflow-hidden gap-3">
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
@@ -58,7 +89,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               <SelectItem value={"license_plate"}>
                 {shared.licensePlate}
               </SelectItem>
-              {/* <SelectItem value={"city"}>city</SelectItem> */}
+              <SelectItem value={"city"}>city</SelectItem>
               <SelectItem value={"reglamentType"}>
                 {shared.reglamentType}
               </SelectItem>
@@ -73,7 +104,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
           </Button>
         </div>
         <div className="flex gap-3">
-          {filterType === "reglamentType" ? (
+          {filterType === "reglamentType" && (
             <Select
               onValueChange={(val: string) => setReglament_type_id(Number(val))}
               value={String(reglament_type_id)}
@@ -94,7 +125,8 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
                 })}
               </SelectContent>
             </Select>
-          ) : (
+          )}
+          {filterType === "license_plate" && (
             <Input
               placeholder={placeHolders.search}
               onChange={(e) =>
@@ -106,7 +138,50 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               }
             />
           )}
-
+          {filterType === "city" && (
+            <Popover open={openAutoPark} onOpenChange={setOpenAutoPark}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openAutoPark}
+                  className="w-[180px] justify-between"
+                >
+                  {selectedAutoPark ? selectedAutoPark.name : "Select city..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[180px] p-0">
+                <Command>
+                  <CommandInput placeholder="Search city..." />
+                  <CommandEmpty>No city found.</CommandEmpty>
+                  <CommandGroup>
+                    {autoParks.map((autoPark) => (
+                      <CommandItem
+                        key={autoPark.id}
+                        onSelect={(currentValue) => {
+                          const newAutoPark = autoParks.find(
+                            (a) => a.id === currentValue
+                          );
+                          setSelectedAutoPark(newAutoPark);
+                          setOpenAutoPark(false);
+                        }}
+                        value={autoPark.id}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedAutoPark?.id === autoPark.id ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {autoPark.name}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          )}
           <NewReglamentDialog
             cb={async () => {
               window.location.reload();
@@ -132,9 +207,12 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               if (filterType === "license_plate") {
                 return reglament.license_plate.includes(filter);
               }
-              // if (filterType === "city") {
-              //   return reglament.city.includes(filter);
-              // }
+              if (filterType === "city") {
+                if (!selectedAutoPark) {
+                  return true;
+                }
+                return reglament.auto_park_id === selectedAutoPark.id;
+              }
               if (filterType === "reglamentType") {
                 if (!reglament_type_id) {
                   return true;
