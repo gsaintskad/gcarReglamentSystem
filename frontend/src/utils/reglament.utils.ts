@@ -41,3 +41,9 @@ export const deleteCarReglament = async (id: number, telegram_id: number) => {
   const { data } = response;
   return true;
 };
+export const getAvailableCarList = async () => {
+  const response = await api.get(`/reglaments/cars/available`);
+  const { data } = response;
+  return data as reglamentTypes.AvailableCar[];
+
+}

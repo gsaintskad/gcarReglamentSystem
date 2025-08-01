@@ -137,3 +137,11 @@ export const getLastCarAcutalization = async (): Promise<Date | null> => {
   return last_actualization;
 
 }
+export const getAvailableCarList = async (): Promise<reglamentTypes.AvailableCar[]> => {
+  const sql = /*sql*/ `
+    SELECT cars.car_id, cars.license_plate, cars.actual_mileage, cars.last_actualization, cars.auto_park_id FROM cars
+    `
+  const {rows} = await reglamentPool.query(sql);
+  return rows as reglamentTypes.AvailableCar[];
+
+}

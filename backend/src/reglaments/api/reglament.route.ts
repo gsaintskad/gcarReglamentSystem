@@ -13,4 +13,5 @@ reglamentRouter.delete(
   "/cars",
   reglamentController.markCarReglamentAsIncactiveEndpoint,
 );
+reglamentRouter.get('/cars/available', reglamentController.getAvailableCarListEndpoint)
 export default reglamentRouter;

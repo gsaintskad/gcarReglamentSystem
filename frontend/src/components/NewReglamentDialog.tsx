@@ -30,6 +30,46 @@ import { Slider } from "@radix-ui/react-slider";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
 import { getMyTaxiCarByLicensePlate } from "@/utils/myTaxi.utils";
 import { licensePlateCheckedCar } from "@/types/myTaxi.types";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils"; // Utility for conditional class names
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+const frameworks = [
+  {
+    value: "next.js",
+    label: "Next.js",
+  },
+  {
+    value: "sveltekit",
+    label: "SvelteKit",
+  },
+  {
+    value: "nuxt.js",
+    label: "Nuxt.js",
+  },
+  {
+    value: "remix",
+    label: "Remix",
+  },
+  {
+    value: "astro",
+    label: "Astro",
+  },
+];
+
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
 }
@@ -46,6 +86,11 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     setMileage_before_deadline_to_remember,
   ] = useState<number>();
   const [comment, setComment] = useState<string>("");
+
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState("")
+
+
   const is_car_found = useMemo<Boolean>(() => {
     return !!car && license_plate == car!.license_plate;
   }, [license_plate, car]);
@@ -110,40 +155,49 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
         </DialogHeader>
         <div className="grid grid-cols-2 ">
           <Label>{sharedI18n.licensePlate}: </Label>
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-3">
-              <Input
-                onChange={(e) => {
-                  const val = e.target.value.toUpperCase();
-                  setLicense_plate(convertCyrillicToLatinLicensePlate(val));
-                }}
-                value={license_plate}
-                placeholder="AA1234AA"
-              ></Input>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
               <Button
-                onClick={async () => {
-                  getAndSaveCarbyLicencePlate(license_plate!);
-                  setIsChecked(true);
-                }}
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-[200px] justify-between"
               >
-                Check
+                {value
+                  ? frameworks.find((framework) => framework.value === value)?.label
+                  : "Select framework..."}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
-            </div>
-            <Label className="font-bold">
-              status:
-              {!is_car_found && license_plate && isChecked && (
-                <Label className="text-red-600">
-                  {license_plate} not found!
-                </Label>
-              )}
-              {is_car_found && isChecked && (
-                <Label className="text-green-600">{license_plate} found!</Label>
-              )}
-              {!isChecked && (
-                <Label>click the button to check {license_plate}</Label>
-              )}
-            </Label>
-          </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+              <Command>
+                <CommandInput placeholder="Search framework..." />
+                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandGroup>
+                  {frameworks.map((framework) => (
+                    <CommandItem
+                      key={framework.value}
+
+                      onSelect={
+                        //@ts-ignore
+                        (currentValue) => {
+                          setValue(currentValue === value ? "" : currentValue)
+                          setOpen(false)
+                        }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === framework.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {framework.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <Label>{sharedI18n.reglamentType}:</Label>
           <Select
             onValueChange={(val: string) => setReglament_type_id(Number(val))}

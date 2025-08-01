@@ -21,6 +21,7 @@ interface GlobalState {
   actualMileageMap: { [key: string]: string } | undefined;
   i18n: i18nLanguageType | undefined;
   chosenLanguage: maintainedLanguages | undefined;
+  licensePlates:string[]|undefined
 }
 
 interface MainContextType {
@@ -42,6 +43,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     reglamentTypes: undefined,
     i18n: languages.en,
     chosenLanguage: "en",
+    licensePlates:[]
   });
 
   useEffect(() => {
