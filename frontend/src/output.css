@@ -1296,6 +1296,10 @@ body {
   font-weight: 600;
 }
 
+.font-bold {
+  font-weight: 700;
+}
+
 .uppercase {
   text-transform: uppercase;
 }
@@ -1342,6 +1346,16 @@ body {
 
 .text-secondary-foreground {
   color: hsl(var(--secondary-foreground));
+}
+
+.text-green-600 {
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity, 1));
+}
+
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
 }
 
 .underline-offset-4 {
