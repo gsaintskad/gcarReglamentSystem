@@ -31,6 +31,6 @@ export interface reglamentType {
   description: string;
 }
 export interface AutoPark {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }

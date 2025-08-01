@@ -31,7 +31,7 @@ interface GlobalState {
   i18n: i18nLanguageType | undefined;
   chosenLanguage: maintainedLanguages | undefined;
   availableCarList: AvailableCar[];
-  autoParks:AutoPark[];
+  autoParks: AutoPark[];
 }
 
 interface MainContextType {
@@ -53,7 +53,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     i18n: languages.en,
     chosenLanguage: "en",
     availableCarList: [],
-    autoParks: []
+    autoParks: [],
   });
 
   useEffect(() => {
@@ -69,13 +69,14 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       const actualMileageMap: { [key: string]: string } =
         await getMyTaxiCarActualMileages(Array.from(uniqueCars));
       const availableCarList = await getAvailableCarList();
-      const autoParks = await getAutoParks()
+      const autoParks = await getAutoParks();
 
       setGlobalState({
         ...structuredClone(globalState),
         reglaments,
         reglamentTypes,
-        availableCarList, autoParks
+        availableCarList,
+        autoParks,
       });
     }
     fetchCarsAndReglamentTypes();

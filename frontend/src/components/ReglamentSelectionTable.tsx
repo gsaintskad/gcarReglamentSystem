@@ -46,18 +46,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export interface AvailableCar{
-  car_id:string,
-  license_plate:string,
-  actual_mileage:number,
-  last_actualization:Date,
-  auto_park_id:string,
+export interface AvailableCar {
+  car_id: string;
+  license_plate: string;
+  actual_mileage: number;
+  last_actualization: Date;
+  auto_park_id: string;
 }
 export interface AutoPark {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
-interface ReglamentSelectionTableProps { }
+interface ReglamentSelectionTableProps {}
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   props: ReglamentSelectionTableProps,
@@ -68,11 +68,13 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   const { globalState, setGlobalState } = useMainContext();
   const { reglaments, reglamentTypes: types, i18n, autoParks } = globalState;
   const { buttons, placeHolders, shared } = i18n!;
-  
+
   // State for the auto park combobox
   const [openAutoPark, setOpenAutoPark] = useState(false);
-  const [selectedAutoPark, setSelectedAutoPark] = useState<AutoPark | undefined>();
-  
+  const [selectedAutoPark, setSelectedAutoPark] = useState<
+    AutoPark | undefined
+  >();
+
   return (
     <div className="flex flex-col overflow-hidden gap-3">
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
@@ -89,7 +91,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               <SelectItem value={"license_plate"}>
                 {shared.licensePlate}
               </SelectItem>
-              <SelectItem value={"city"}>city</SelectItem>
+              <SelectItem value={"autoPark"}>{shared.autoPark}</SelectItem>
               <SelectItem value={"reglamentType"}>
                 {shared.reglamentType}
               </SelectItem>
@@ -138,7 +140,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               }
             />
           )}
-          {filterType === "city" && (
+          {filterType === "autoPark" && (
             <Popover open={openAutoPark} onOpenChange={setOpenAutoPark}>
               <PopoverTrigger asChild>
                 <Button
@@ -147,21 +149,23 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
                   aria-expanded={openAutoPark}
                   className="w-[180px] justify-between"
                 >
-                  {selectedAutoPark ? selectedAutoPark.name : "Select city..."}
+                  {selectedAutoPark
+                    ? selectedAutoPark.name
+                    : placeHolders.autoParkInput}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[180px] p-0">
                 <Command>
-                  <CommandInput placeholder="Search city..." />
-                  <CommandEmpty>No city found.</CommandEmpty>
+                  <CommandInput placeholder="Search autoPark..." />
+                  <CommandEmpty>No autoPark found.</CommandEmpty>
                   <CommandGroup>
                     {autoParks.map((autoPark) => (
                       <CommandItem
                         key={autoPark.id}
                         onSelect={(currentValue) => {
                           const newAutoPark = autoParks.find(
-                            (a) => a.id === currentValue
+                            (a) => a.id === currentValue,
                           );
                           setSelectedAutoPark(newAutoPark);
                           setOpenAutoPark(false);
@@ -171,7 +175,9 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            selectedAutoPark?.id === autoPark.id ? "opacity-100" : "opacity-0"
+                            selectedAutoPark?.id === autoPark.id
+                              ? "opacity-100"
+                              : "opacity-0",
                           )}
                         />
                         {autoPark.name}
@@ -207,7 +213,7 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               if (filterType === "license_plate") {
                 return reglament.license_plate.includes(filter);
               }
-              if (filterType === "city") {
+              if (filterType === "autoPark") {
                 if (!selectedAutoPark) {
                   return true;
                 }
