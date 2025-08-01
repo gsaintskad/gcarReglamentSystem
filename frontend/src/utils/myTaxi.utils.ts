@@ -29,5 +29,4 @@ export const getMyTaxiCarActualMileages = async (car_ids: string[]) => {
   console.log(response);
   const { mileages } = response.data;
   return mileages;
-
-}
+};

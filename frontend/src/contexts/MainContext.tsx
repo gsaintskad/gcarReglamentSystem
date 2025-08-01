@@ -9,7 +9,10 @@ import React, {
   useEffect,
 } from "react";
 import { getCarReglaments, getReglamentTypes } from "@/utils/reglament.utils";
-import { getMyTaxiCarActualMileage, getMyTaxiCarActualMileages } from "@/utils/myTaxi.utils";
+import {
+  getMyTaxiCarActualMileage,
+  getMyTaxiCarActualMileages,
+} from "@/utils/myTaxi.utils";
 import { i18nLanguageType, maintainedLanguages } from "@/i18n";
 import * as languages from "@/i18n";
 interface GlobalState {
@@ -38,7 +41,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     actualMileageMap: undefined,
     reglamentTypes: undefined,
     i18n: languages.en,
-    chosenLanguage: 'en',
+    chosenLanguage: "en",
   });
 
   useEffect(() => {
@@ -50,17 +53,27 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       const uniqueCars = reglaments.reduce((acc, reglament): Set<string> => {
         acc.add(reglament.car_id);
         return acc;
-      }, new Set<string>())
-      const actualMileageMap: { [key: string]: string } = await getMyTaxiCarActualMileages(Array.from(uniqueCars))
+      }, new Set<string>());
+      const actualMileageMap: { [key: string]: string } =
+        await getMyTaxiCarActualMileages(Array.from(uniqueCars));
 
-      setGlobalState({ ...structuredClone(globalState), reglaments, reglamentTypes, actualMileageMap, });
+      setGlobalState({
+        ...structuredClone(globalState),
+        reglaments,
+        reglamentTypes,
+        actualMileageMap,
+      });
     }
     fetchCarsAndReglamentTypes();
   }, []);
   useEffect(() => {
-    const i18n: i18nLanguageType = languages[globalState.chosenLanguage!]
+    const i18n: i18nLanguageType = languages[globalState.chosenLanguage!];
     console.log(i18n);
-    setGlobalState({ ...structuredClone(globalState), i18n, chosenLanguage: globalState.chosenLanguage });
+    setGlobalState({
+      ...structuredClone(globalState),
+      i18n,
+      chosenLanguage: globalState.chosenLanguage,
+    });
     console.log(globalState);
   }, [globalState.chosenLanguage]);
   const contextValue: MainContextType = {

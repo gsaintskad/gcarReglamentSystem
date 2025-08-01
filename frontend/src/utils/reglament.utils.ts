@@ -27,7 +27,7 @@ export const updateCarReglament = async (
     mileage_before_deadline_to_remember: number;
     telegram_id: number;
   },
-  reglament: reglamentTypes.carReglamentDto
+  reglament: reglamentTypes.carReglamentDto,
 ) => {
   const { id } = reglament;
   const response = await api.put(`/reglaments/cars`, { ...dto, id });
@@ -36,7 +36,7 @@ export const updateCarReglament = async (
 };
 export const deleteCarReglament = async (id: number, telegram_id: number) => {
   const response = await api.delete(
-    `/reglaments/cars?id=${id}&telegram_id=${telegram_id}`
+    `/reglaments/cars?id=${id}&telegram_id=${telegram_id}`,
   );
   const { data } = response;
   return true;

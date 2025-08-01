@@ -11,7 +11,7 @@ export const testCallReglamentPool = async (): Promise<any> => {
 };
 
 export const addReglamentType = async (
-  dto: reglamentTypes.reglamentDto
+  dto: reglamentTypes.reglamentDto,
 ): Promise<void> => {
   const sql = /*sql*/ `INSERT INTO reglament_types (name, description) VALUES ($1, $2)`;
   const params = [dto.name, dto.description];
@@ -26,7 +26,7 @@ export const getReglamentTypes = async (): Promise<any> => {
 };
 
 export const assignReglamentToCar = async (
-  dto: reglamentTypes.carReglamentDto
+  dto: reglamentTypes.carReglamentDto,
 ): Promise<void> => {
   const assignDto = { ...dto }; // Defensive copy
 
@@ -82,7 +82,7 @@ export const getCarReglaments = async (): Promise<
   return rows as reglamentTypes.carReglamentDto[];
 };
 export const updateCarReglament = async (
-  dto: reglamentTypes.carReglamentDto
+  dto: reglamentTypes.carReglamentDto,
 ): Promise<void> => {
   const sql = /*sql*/ `
     UPDATE cars_to_reglaments 
@@ -109,7 +109,7 @@ export const updateCarReglament = async (
 
 export const markCarReglamentAsIncactive = async (
   id: number,
-  telegram_id: number // Added telegram_id as a new parameter
+  telegram_id: number, // Added telegram_id as a new parameter
 ): Promise<void> => {
   const sql = /*sql*/ `
     UPDATE cars_to_reglaments 
@@ -126,3 +126,14 @@ export const markCarReglamentAsIncactive = async (
   devLog("Marking car reglament as inactive...", sql, params);
   await reglamentPool.query(sql, params);
 };
+export const getLastCarAcutalization = async (): Promise<Date | null> => {
+  const sql = /*sql*/ `
+    SELECT MAX(last_actualization) FROM cars;
+  `
+  const result = await reglamentPool.query(sql);
+  const { rows } = result;
+  const [row] = rows as [{ max: Date }];
+  const { max: last_actualization } = row;
+  return last_actualization;
+
+}

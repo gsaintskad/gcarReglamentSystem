@@ -31,17 +31,17 @@ import { carReglamentDto } from "@/types/reglament.types";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import useMainContext from "@/contexts/MainContext";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
-interface ReglamentSelectionTableProps { }
+interface ReglamentSelectionTableProps {}
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
-  props: ReglamentSelectionTableProps
+  props: ReglamentSelectionTableProps,
 ) => {
   const [filter, setFilter] = useState("");
   const [filterType, setFilterType] = useState("license_plate");
   const [reglament_type_id, setReglament_type_id] = useState<number>(0);
   const { globalState, setGlobalState } = useMainContext();
   const { reglaments, reglamentTypes: types, i18n } = globalState;
-  const { buttons, placeHolders, shared } = i18n!
+  const { buttons, placeHolders, shared } = i18n!;
   return (
     <div className="flex flex-col overflow-hidden gap-3">
       <div className="flex max-sm:flex-col max-sm:content-between items-center gap-5">
@@ -55,9 +55,13 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={"license_plate"}>{shared.licensePlate}</SelectItem>
+              <SelectItem value={"license_plate"}>
+                {shared.licensePlate}
+              </SelectItem>
               {/* <SelectItem value={"city"}>city</SelectItem> */}
-              <SelectItem value={"reglamentType"}>{shared.reglamentType}</SelectItem>
+              <SelectItem value={"reglamentType"}>
+                {shared.reglamentType}
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -96,8 +100,8 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
               onChange={(e) =>
                 setFilter(
                   convertCyrillicToLatinLicensePlate(
-                    e.target.value
-                  ).toUpperCase()
+                    e.target.value,
+                  ).toUpperCase(),
                 )
               }
             />
@@ -113,10 +117,13 @@ const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
       <Table className="w-full ">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] font-black">{shared.licensePlate}</TableHead>
+            <TableHead className="w-[100px] font-black">
+              {shared.licensePlate}
+            </TableHead>
             <TableHead>{shared.reglamentType}</TableHead>
-            <TableHead className="text-center">{shared.remainingMileage} (KM)</TableHead>
-
+            <TableHead className="text-center">
+              {shared.remainingMileage} (KM)
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="overflow-y-auto">

@@ -3,7 +3,7 @@ import * as reglamentRepo from "../reglament.queries.js";
 import * as reglamentTypes from "../reglament.types.js";
 
 export const addReglamentTypeHandler = async (
-  dto: reglamentTypes.reglamentDto
+  dto: reglamentTypes.reglamentDto,
 ) => {
   await reglamentRepo.addReglamentType(dto);
   return true;
@@ -13,7 +13,7 @@ export const getReglamentTypesHandler = async () => {
   return { reglamentTypes };
 };
 export const assignReglamentToCarHandler = async (
-  dto: reglamentTypes.carReglamentDto
+  dto: reglamentTypes.carReglamentDto,
 ) => {
   await reglamentRepo.assignReglamentToCar(dto);
   return true;
@@ -22,11 +22,16 @@ export const getCarReglamentsHandler = async () => {
   const carReglaments = await reglamentRepo.getCarReglaments();
   return { carReglaments };
 };
-export const updateCarReglamentHandler = async (dto: reglamentTypes.carReglamentDto) => {
+export const updateCarReglamentHandler = async (
+  dto: reglamentTypes.carReglamentDto,
+) => {
   await reglamentRepo.updateCarReglament(dto);
   return true;
-}
-export const markCarReglamentAsIncactiveHandler = async (id: number,telegram_id: number) => {
-  await reglamentRepo.markCarReglamentAsIncactive(id,telegram_id);
+};
+export const markCarReglamentAsIncactiveHandler = async (
+  id: number,
+  telegram_id: number,
+) => {
+  await reglamentRepo.markCarReglamentAsIncactive(id, telegram_id);
   return true;
-}
+};

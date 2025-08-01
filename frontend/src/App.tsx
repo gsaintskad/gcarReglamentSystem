@@ -25,9 +25,11 @@ function App() {
   useEffect(() => {
     console.log({ language });
     setGlobalState({ ...globalState, chosenLanguage: language });
-  }, [language])
-  const UKRAINE_FLAG_URL = 'https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg';
-  const UK_FLAG_URL = 'https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg';
+  }, [language]);
+  const UKRAINE_FLAG_URL =
+    "https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg";
+  const UK_FLAG_URL =
+    "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg";
 
   // Define a consistent width variable.
   // Using an arbitrary value like `w-[120px]` is often better for fixed widths.
@@ -47,13 +49,25 @@ function App() {
             <SelectTrigger className={selectFixedTriggerWidth}>
               <SelectValue>
                 {language === "en" && (
-                  <div className="flex items-center justify-center h-full w-full"> {/* Center content */}
-                    <img src={UK_FLAG_URL} alt="British Flag" className="h-4 w-auto" />
+                  <div className="flex items-center justify-center h-full w-full">
+                    {" "}
+                    {/* Center content */}
+                    <img
+                      src={UK_FLAG_URL}
+                      alt="British Flag"
+                      className="h-4 w-auto"
+                    />
                   </div>
                 )}
                 {language === "ua" && (
-                  <div className="flex items-center justify-center h-full w-full"> {/* Center content */}
-                    <img src={UKRAINE_FLAG_URL} alt="Ukrainian Flag" className="h-4 w-auto" />
+                  <div className="flex items-center justify-center h-full w-full">
+                    {" "}
+                    {/* Center content */}
+                    <img
+                      src={UKRAINE_FLAG_URL}
+                      alt="Ukrainian Flag"
+                      className="h-4 w-auto"
+                    />
                   </div>
                 )}
                 {!language && <span>Select</span>}
@@ -75,13 +89,25 @@ function App() {
               `}
             >
               <SelectItem value={"en"}>
-                <div className="flex items-center justify-center h-full w-full"> {/* Center flags in dropdown items */}
-                  <img src={UK_FLAG_URL} alt="British Flag" className="h-4 w-6" />
+                <div className="flex items-center justify-center h-full w-full">
+                  {" "}
+                  {/* Center flags in dropdown items */}
+                  <img
+                    src={UK_FLAG_URL}
+                    alt="British Flag"
+                    className="h-4 w-6"
+                  />
                 </div>
               </SelectItem>
               <SelectItem value={"ua"}>
-                <div className="flex items-center justify-center h-full w-full"> {/* Center flags in dropdown items */}
-                  <img src={UKRAINE_FLAG_URL} alt="Ukrainian Flag" className="h-4 w-6" />
+                <div className="flex items-center justify-center h-full w-full">
+                  {" "}
+                  {/* Center flags in dropdown items */}
+                  <img
+                    src={UKRAINE_FLAG_URL}
+                    alt="Ukrainian Flag"
+                    className="h-4 w-6"
+                  />
                 </div>
               </SelectItem>
             </SelectContent>

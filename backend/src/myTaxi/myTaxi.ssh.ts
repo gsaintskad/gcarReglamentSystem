@@ -45,7 +45,7 @@ export const openMyTaxiSShTunnel = new Promise<string>((resolve, reject) => {
         }
         sock.pipe(stream);
         stream.pipe(sock);
-      }
+      },
     );
   });
 
@@ -57,7 +57,7 @@ export const openMyTaxiSShTunnel = new Promise<string>((resolve, reject) => {
   if (!proxyPort || !proxyHost) {
     console.error("Missing PROXY_PORT or PROXY_HOST environment variables.");
     return reject(
-      new Error("Missing PROXY_PORT or PROXY_HOST environment variables.")
+      new Error("Missing PROXY_PORT or PROXY_HOST environment variables."),
     );
   }
 
@@ -69,7 +69,7 @@ export const openMyTaxiSShTunnel = new Promise<string>((resolve, reject) => {
   if (!privateKeyPath) {
     console.error("Missing SSH_PRIVATE_KEY_PATH environment variable.");
     return reject(
-      new Error("Missing SSH_PRIVATE_KEY_PATH environment variable.")
+      new Error("Missing SSH_PRIVATE_KEY_PATH environment variable."),
     );
   }
 
@@ -81,7 +81,7 @@ export const openMyTaxiSShTunnel = new Promise<string>((resolve, reject) => {
   if (!sshHost || !sshUser) {
     console.error("Missing SSH_HOST or SSH_USER environment variables.");
     return reject(
-      new Error("Missing SSH_HOST or SSH_USER environment variables.")
+      new Error("Missing SSH_HOST or SSH_USER environment variables."),
     );
   }
 

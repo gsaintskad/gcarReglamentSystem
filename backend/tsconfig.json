@@ -1,23 +1,18 @@
 // tsconfig.json
 {
   "compilerOptions": {
-    "target": "ES2022",         // Ensures modern JS features like top-level await are targeted
-    "module": "NodeNext",        // Crucial for Node.js's ESM resolution and top-level await
+    "target": "ES2022", // Ensures modern JS features like top-level await are targeted
+    "module": "NodeNext", // Crucial for Node.js's ESM resolution and top-level await
     "moduleResolution": "NodeNext", // Helps TypeScript understand Node.js's module resolution rules
-    "lib": ["ES2022", "DOM"],    // Include relevant library types
+    "lib": ["ES2022", "DOM"], // Include relevant library types
     "outDir": "./dist",
-    "rootDir": "./",             // Adjust if your source is in a 'src' folder
+    "rootDir": "./", // Adjust if your source is in a 'src' folder
     "strict": true,
-    "esModuleInterop": true,     // Essential for interoperability with CommonJS packages
+    "esModuleInterop": true, // Essential for interoperability with CommonJS packages
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

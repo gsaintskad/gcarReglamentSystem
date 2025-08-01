@@ -11,6 +11,7 @@
     "start:prod": "ENV=PROD node --no-warnings --loader ts-node/esm main.ts",
     "dev": "nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\"",
     "build": "tsc",
+    "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:make": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:make",
     "migrate:latest": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:latest",
@@ -18,14 +19,18 @@
     "migrate:up": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:up",
     "migrate:down": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:down",
     "seed:make": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:make",
-    "seed:run": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:run"
+    "seed:run": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:run",
+    "testActualizeCarListManually":"ENV=TEST node --no-warnings --loader ts-node/esm src/reglaments/modules/actualize-car-list.ts"
   },
   "dependencies": {
+    "@types/cron": "^2.0.1",
     "cors": "^2.8.5",
+    "cron": "^4.3.3",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "knex": "^3.1.0",
     "pg": "^8.16.3",
+    "prettier": "^3.6.2",
     "ssh2": "^1.16.0"
   },
   "devDependencies": {

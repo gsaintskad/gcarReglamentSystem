@@ -46,21 +46,28 @@ interface ReglamentEditingDialogProps {
   cb: () => Promise<any>;
 }
 const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
-  props: ReglamentEditingDialogProps
+  props: ReglamentEditingDialogProps,
 ) => {
   const { reglament } = props;
 
   const { globalState } = useMainContext();
   const { reglamentTypes: types, actualMileageMap, i18n } = globalState;
-  const { shared: sharedI18n, buttons: buttonsI18n, placeHolders: placeHoldersI18n, editReglament: editReglamentI18n } = i18n!
+  const {
+    shared: sharedI18n,
+    buttons: buttonsI18n,
+    placeHolders: placeHoldersI18n,
+    editReglament: editReglamentI18n,
+  } = i18n!;
   const { car_id, auto_park_id, mileage_stamp, license_plate } = reglament;
   const [reglament_type_id, setReglament_type_id] = useState<number>(
-    Number(reglament.reglament_type_id)
+    Number(reglament.reglament_type_id),
   );
   const [mileage_deadline, setMileage_deadline] = useState<number>(
-    reglament.mileage_deadline
+    reglament.mileage_deadline,
   );
-  const [actualMileage, setActualMileage] = useState<number>(Number(actualMileageMap![car_id]));
+  const [actualMileage, setActualMileage] = useState<number>(
+    Number(actualMileageMap![car_id]),
+  );
   const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
     useState<boolean>(false);
   const [
@@ -75,10 +82,14 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   // });
 
   const { progress, progress_color, bg_color } = useMemo(() => {
-    let progress = Math.min(Math.floor(
-      ((actualMileage! - reglament.mileage_stamp) / (mileage_deadline * 1000)) *
-      100
-    ), 100)
+    let progress = Math.min(
+      Math.floor(
+        ((actualMileage! - reglament.mileage_stamp) /
+          (mileage_deadline * 1000)) *
+          100,
+      ),
+      100,
+    );
 
     if (mileage_deadline == 0) {
       progress = 100;
@@ -86,7 +97,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     const notify_marker = Math.floor(
       ((mileage_deadline - mileage_before_deadline_to_remember) /
         mileage_deadline) *
-      100
+        100,
     );
     let progress_color;
     let bg_color;
@@ -104,7 +115,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       progress,
       progress_color,
       bg_color,
-    })
+    });
     return {
       progress,
       progress_color,
@@ -129,7 +140,9 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   }, [reglament_type_id, types]);
   const mileageLeftOver = useMemo(() => {
     if (!actualMileage || !mileage_deadline) return 0;
-    return Math.floor(mileage_deadline - (actualMileage - reglament.mileage_stamp) / 1000);
+    return Math.floor(
+      mileage_deadline - (actualMileage - reglament.mileage_stamp) / 1000,
+    );
   }, [actualMileage, mileage_deadline]);
   // console.log({ reglament, progress, progress_color, bg_color });
   return actualMileage ? (
@@ -140,9 +153,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
 
           <TableCell className="font-medium ">{reglament_type_name}</TableCell>
 
-          <TableCell className="text-center">
-            {mileageLeftOver}
-          </TableCell>
+          <TableCell className="text-center">{mileageLeftOver}</TableCell>
         </TableRow>
       </DialogTrigger>
       <DialogContent className="h-3/4 max-sm:max-w-sm ">
@@ -150,9 +161,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           <DialogTitle>
             {sharedI18n.reglament} {license_plate} #{reglament.id!}
           </DialogTitle>
-          <DialogDescription>
-            {editReglamentI18n.description}
-          </DialogDescription>
+          <DialogDescription>{editReglamentI18n.description}</DialogDescription>
         </DialogHeader>
         <div className="flex justify-between gap-3">
           <Button
@@ -160,7 +169,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             onClick={async () => {
               await deleteCarReglament(
                 Number(reglament.id),
-                77777 //telegram_id
+                77777, //telegram_id
               );
               window.location.reload();
             }}
@@ -172,7 +181,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             variant={"outline"}
             onClick={async () => {
               setIsEditingModeTurnedOn(
-                (isEditingModeTurnedOn) => !isEditingModeTurnedOn
+                (isEditingModeTurnedOn) => !isEditingModeTurnedOn,
               );
               if (isEditingModeTurnedOn) {
                 await updateCarReglament(
@@ -183,7 +192,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
                     mileage_before_deadline_to_remember,
                     telegram_id: 12345,
                   },
-                  reglament
+                  reglament,
                 );
                 window.location.reload();
               }
@@ -269,9 +278,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             </div>
           </div>
 
-          <Label className="ml-3 text-nowrap">
-            {mileage_deadline} KM
-          </Label>
+          <Label className="ml-3 text-nowrap">{mileage_deadline} KM</Label>
         </div>
 
         <DialogFooter>
@@ -287,7 +294,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
                     mileage_before_deadline_to_remember,
                     telegram_id: 12345,
                   },
-                  reglament
+                  reglament,
                 );
                 window.location.reload();
               }}
