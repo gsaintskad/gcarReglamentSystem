@@ -6,7 +6,7 @@ import * as myTaxiTypes from "../myTaxi.types.js";
 //   return cars;
 // };
 export const getCarReglamentDataByLicensePlateHandler = async (
-  license_plate: string
+  license_plate: string,
 ) => {
   const { rows }: { rows: myTaxiTypes.getCarsJson[] } =
     await myTaxiRepo.getCarReglamentDataByLicensePlate(license_plate);
@@ -19,11 +19,12 @@ export const getMyTaxiCarActualMileageHandler = async (car_id: string) => {
   return car.actual_mileage;
 };
 export const getMyTaxiCarActualMileagesHandler = async (car_ids: string[]) => {
-  const { rows:actualMileages } = await myTaxiRepo.getMyTaxiCarActualMileages(car_ids);
-  
-  return actualMileages.reduce((acc,curr)=>{
-    acc[curr.car_id] = curr.actual_mileage
+  const { rows: actualMileages } =
+    await myTaxiRepo.getMyTaxiCarActualMileages(car_ids);
 
-    return acc
-  },{});
+  return actualMileages.reduce((acc, curr) => {
+    acc[curr.car_id] = curr.actual_mileage;
+
+    return acc;
+  }, {});
 };

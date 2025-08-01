@@ -15,7 +15,7 @@ import { devLog } from "../../shared/dev.utils.js";
 // };
 export const getCarReglamentDataByLicensePlateEndpoint = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     devLog("Getting cars...");
@@ -24,7 +24,7 @@ export const getCarReglamentDataByLicensePlateEndpoint = async (
       return res.status(400).json({ message: "License plate is required" });
     }
     const car = await myTaxiService.getCarReglamentDataByLicensePlateHandler(
-      license_plate as string
+      license_plate as string,
     );
     res.status(200).json({ car });
   } catch (error) {
@@ -34,7 +34,7 @@ export const getCarReglamentDataByLicensePlateEndpoint = async (
 };
 export const getMyTaxiCarActualMileageEndpoint = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     devLog("Getting cars...");
@@ -44,7 +44,7 @@ export const getMyTaxiCarActualMileageEndpoint = async (
       return res.status(400).json({ message: "Car id is required" });
     }
     const mileage = await myTaxiService.getMyTaxiCarActualMileageHandler(
-      car_id as string
+      car_id as string,
     );
     res.status(200).json({ mileage });
   } catch (error) {
@@ -54,21 +54,20 @@ export const getMyTaxiCarActualMileageEndpoint = async (
 };
 export const getMyTaxiCarActualMileagesEndpoint = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     devLog("Getting cars...");
-    console.log(req.body)
-    const  car_ids  = req.body
+    console.log(req.body);
+    const car_ids = req.body;
     if (!car_ids) {
       return res.status(400).json({ message: "Car ids are required" });
     }
-    const mileages = await myTaxiService.getMyTaxiCarActualMileagesHandler(
-      car_ids
-    );
+    const mileages =
+      await myTaxiService.getMyTaxiCarActualMileagesHandler(car_ids);
     res.status(200).json({ mileages });
   } catch (error) {
     console.error("Unexpected error:", error);
-    res.status(500).send('An unexpected error occurred');
+    res.status(500).send("An unexpected error occurred");
   }
-}
+};

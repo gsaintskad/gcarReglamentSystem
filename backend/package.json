@@ -11,6 +11,7 @@
     "start:prod": "ENV=PROD node --no-warnings --loader ts-node/esm main.ts",
     "dev": "nodemon --exec \"node --no-warnings --loader ts-node/esm main.ts\"",
     "build": "tsc",
+    "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:make": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:make",
     "migrate:latest": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:latest",
@@ -26,6 +27,7 @@
     "express": "^5.1.0",
     "knex": "^3.1.0",
     "pg": "^8.16.3",
+    "prettier": "^3.6.2",
     "ssh2": "^1.16.0"
   },
   "devDependencies": {

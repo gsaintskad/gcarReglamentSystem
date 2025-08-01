@@ -17,7 +17,7 @@ export const addReglamentTypeEndpoint = async (req: Request, res: Response) => {
 };
 export const getReglamentTypesEndpoint = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     devLog("getting reglament type...");
@@ -31,7 +31,7 @@ export const getReglamentTypesEndpoint = async (
 };
 export const createCarReglamentEndpoint = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { body: dto }: { body: reglamentTypes.carReglamentDto } = req;
@@ -56,28 +56,36 @@ export const getCarReglamentsEndpoint = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCarReglamentEndpoint = async (req: Request, res: Response) => {
+export const updateCarReglamentEndpoint = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     devLog("updating car reglament...");
     const { body: dto }: { body: reglamentTypes.carReglamentDto } = req;
     await reglamentService.updateCarReglamentHandler(dto);
-    }
-    catch (error) {
+  } catch (error) {
     console.error("Unexpected error:", error);
-      res.status(500).json({ message: "An unexpected error occurred" });
-    }
-}
-export const markCarReglamentAsIncactiveEndpoint = async (req: Request, res: Response) => {
+    res.status(500).json({ message: "An unexpected error occurred" });
+  }
+};
+export const markCarReglamentAsIncactiveEndpoint = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     devLog("updating car reglament...");
-    const { id,telegram_id } = req.query;
+    const { id, telegram_id } = req.query;
     if (!id) {
       return res.status(400).json({ message: "id is required" });
     }
-    await reglamentService.markCarReglamentAsIncactiveHandler(Number(id),Number(telegram_id));
+    await reglamentService.markCarReglamentAsIncactiveHandler(
+      Number(id),
+      Number(telegram_id),
+    );
     res.status(204).json({ data: { message: "success" } });
   } catch (error) {
-    console.error("Unexpected error:", error);  
+    console.error("Unexpected error:", error);
     res.status(500).json({ message: "An unexpected error occurred" });
   }
-}
+};

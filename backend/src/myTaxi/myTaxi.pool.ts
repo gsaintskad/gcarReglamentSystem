@@ -16,14 +16,14 @@ const PROXY_HOST = process.env.MY_TAXI_PROXY_HOST;
 const PROXY_PORT = process.env.MY_TAXI_PROXY_PORT;
 const PG_DB = process.env.MY_TAXI_PG_DB;
 const ENV = process.env.ENV;
-devLog({PG_USER, PG_PASSWORD, PROXY_HOST, PROXY_PORT, PG_DB, ENV})
+devLog({ PG_USER, PG_PASSWORD, PROXY_HOST, PROXY_PORT, PG_DB, ENV });
 
 if (!PG_USER || !PG_PASSWORD || !PROXY_HOST || !PROXY_PORT || !PG_DB) {
   console.error(
-    "Missing one or more required PostgreSQL environment variables."
+    "Missing one or more required PostgreSQL environment variables.",
   );
   console.error(
-    "Please ensure PG_USER, PG_PASSWORD, PROXY_HOST, PROXY_PORT, and PG_DB are set."
+    "Please ensure PG_USER, PG_PASSWORD, PROXY_HOST, PROXY_PORT, and PG_DB are set.",
   );
   process.exit(1);
 }
@@ -84,18 +84,18 @@ process.on("SIGTERM", async () => {
 process.on("uncaughtException", async (error: Error) => {
   console.error("Uncaught Exception:", error.message, error.stack);
   console.log(
-    "Attempting to close PostgreSQL pool due to uncaught exception..."
+    "Attempting to close PostgreSQL pool due to uncaught exception...",
   );
   try {
     await myTaxiPool.end();
     console.log(
-      "PostgreSQL pool closed successfully after uncaught exception."
+      "PostgreSQL pool closed successfully after uncaught exception.",
     );
     process.exit(1);
   } catch (err) {
     console.error(
       "Error closing PostgreSQL pool after uncaught exception:",
-      err
+      err,
     );
     process.exit(1);
   }

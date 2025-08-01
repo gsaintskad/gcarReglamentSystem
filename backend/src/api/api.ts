@@ -12,9 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: '*', // <--- Explicitly allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // You can still specify methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // And headers
+  origin: "*", // <--- Explicitly allow all origins
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // You can still specify methods
+  allowedHeaders: ["Content-Type", "Authorization"], // And headers
   // Note: Do NOT set 'credentials: true' here if origin is '*'
 };
 
