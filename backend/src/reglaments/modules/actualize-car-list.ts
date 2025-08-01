@@ -1,3 +1,1 @@
-export const actualizeCarList = async (): Promise<void> => {
-
-}
+export const actualizeCarList = async (): Promise<void> => {};
