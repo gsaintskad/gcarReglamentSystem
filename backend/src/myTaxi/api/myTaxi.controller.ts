@@ -71,3 +71,16 @@ export const getMyTaxiCarActualMileagesEndpoint = async (
     res.status(500).send("An unexpected error occurred");
   }
 };
+export const getMyTaxiAutoParksEndpoint = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    devLog("Getting auto parks...");
+    const autoParks = await myTaxiService.getMyTaxiAutoParksHandler();
+    res.status(200).json({ data: autoParks });
+  }
+  catch (error) {
+
+  }
+}

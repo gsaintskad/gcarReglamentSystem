@@ -54,7 +54,7 @@ export const getMyTaxiCarActualMileages = async (car_ids: string[]) => {
   return { rows };
 };
 export const getAllAutoParks = async () => {
-  const sql = `select * from auto_parks`;
+  const sql = `select ap.id, ap.name from auto_parks ap`;
   const result = await myTaxiPool.query(sql);
   const { rows, rowCount } = result;
   return { rows };

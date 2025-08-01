@@ -17,4 +17,5 @@ myTaxiRouter.post(
   "/mileage",
   myTaxiController.getMyTaxiCarActualMileagesEndpoint,
 );
+myTaxiRouter.get("/auto-parks", myTaxiController.getMyTaxiAutoParksEndpoint);
 export default myTaxiRouter;

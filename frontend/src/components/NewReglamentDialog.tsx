@@ -45,14 +45,12 @@ import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
  * in the availableCarList.
  */
 export interface AvailableCar {
-  car_id: string,
-  license_plate: string,
-  actual_mileage: number,
-  last_actualization: Date,
-  auto_park_id: string,
+  car_id: string;
+  license_plate: string;
+  actual_mileage: number;
+  last_actualization: Date;
+  auto_park_id: string;
 }
-
-
 
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
@@ -64,7 +62,10 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   // State for form fields
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
-  const [mileage_before_deadline_to_remember, setMileage_before_deadline_to_remember] = useState<number>();
+  const [
+    mileage_before_deadline_to_remember,
+    setMileage_before_deadline_to_remember,
+  ] = useState<number>();
   const [comment, setComment] = useState<string>("");
 
   // State for the Combobox Popover
@@ -72,11 +73,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
 
   // State for the selected car from the Combobox
-  const [selectedCar, setSelectedCar] = useState<reglamentTypes.AvailableCar | undefined>();
+  const [selectedCar, setSelectedCar] = useState<
+    reglamentTypes.AvailableCar | undefined
+  >();
 
   // Get global state from the context
   const { globalState } = useMainContext();
-  const { reglamentTypes: types, i18n, availableCarList } = globalState;
+  const { reglamentTypes: types, i18n, availableCarList, autoParks } = globalState;
   const {
     buttons: buttonsI18n,
     shared: sharedI18n,
@@ -159,16 +162,19 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     if (!availableCarList) {
       return [];
     }
-    const convertedSearchTerm = convertCyrillicToLatinLicensePlate(searchTerm.toLowerCase());
+    const convertedSearchTerm = convertCyrillicToLatinLicensePlate(
+      searchTerm.toLowerCase(),
+    );
     if (!convertedSearchTerm) {
       return availableCarList;
     }
 
     return availableCarList.filter((car) =>
-      convertCyrillicToLatinLicensePlate(car.license_plate.toLowerCase()).includes(convertedSearchTerm)
+      convertCyrillicToLatinLicensePlate(
+        car.license_plate.toLowerCase(),
+      ).includes(convertedSearchTerm),
     );
   }, [availableCarList, searchTerm]);
-
 
   return (
     <Dialog>
@@ -193,7 +199,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               >
                 {selectedCar
                   ? selectedCar.license_plate
-                  : "Select car..."}
+                  : placeHoldersI18n.licensePlateInput}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -211,7 +217,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                       key={`creation-${car.car_id}`}
                       onSelect={(value) => {
                         const newCar = availableCarList.find(
-                          (c) => c.license_plate === value
+                          (c) => c.license_plate === value,
                         );
                         setSelectedCar(newCar);
                         setOpen(false);
@@ -221,7 +227,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          selectedCar?.car_id === car.car_id ? "opacity-100" : "opacity-0"
+                          selectedCar?.car_id === car.car_id
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
                       {car.license_plate}
@@ -231,7 +239,14 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               </Command>
             </PopoverContent>
           </Popover>
-
+          {isCarSelected && (
+            <>
+              <Label>{sharedI18n.autoPark}:</Label>
+              <Label>{autoParks.find((autoPark) => autoPark.id === selectedCar?.auto_park_id)?.name}</Label>
+              <Label>{sharedI18n.mileage}(KM):</Label>
+              <Label>{Math.floor(selectedCar!.actual_mileage / 1000)}</Label>
+            </>
+          )}
           <Label>{sharedI18n.reglamentType}:</Label>
           <Select
             onValueChange={(val: string) => setReglament_type_id(Number(val))}

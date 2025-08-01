@@ -28,3 +28,7 @@ export const getMyTaxiCarActualMileagesHandler = async (car_ids: string[]) => {
     return acc;
   }, {});
 };
+export const getMyTaxiAutoParksHandler = async () => {
+  const { rows: autoParks } = await myTaxiRepo.getAllAutoParks();
+  return autoParks;
+};

@@ -12,6 +12,8 @@ export const en = {
     progress: "Progress",
     licensePlate: "License plate",
     reglament: "Reglament",
+    autoPark: "Auto park",
+    mileage:'Mileage'
   },
   newReglament: {
     createReglament: "Create Reglament",
@@ -35,6 +37,8 @@ export const en = {
     reglamentTypeSelect: "Type",
     search: "Search...",
     commentInput: "Reglament details...",
+    autoParkInput: "Select auto park...",
+    licensePlateInput: "License plate...",
   },
 };
 export type i18nLanguageType = typeof en;
@@ -50,6 +54,8 @@ export const ua: i18nLanguageType = {
     progress: "Прогрес",
     licensePlate: "Номерний знак",
     reglament: "Регламент",
+    autoPark: "Автопарк",
+    mileage:'Пробіг'
   },
   newReglament: {
     createReglament: "Створити регламент",
@@ -73,5 +79,7 @@ export const ua: i18nLanguageType = {
     reglamentTypeSelect: "Тип",
     search: "Пошук...",
     commentInput: "Деталі регламенту...",
+    autoParkInput: "Виберіть автопарк...",
+    licensePlateInput: "Номерний знак...",
   },
 };

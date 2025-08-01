@@ -51,7 +51,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const { reglament } = props;
 
   const { globalState } = useMainContext();
-  const { reglamentTypes: types, actualMileageMap, i18n } = globalState;
+  const { reglamentTypes: types, i18n, availableCarList, autoParks } = globalState;
   const {
     shared: sharedI18n,
     buttons: buttonsI18n,
@@ -66,7 +66,9 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     reglament.mileage_deadline,
   );
   const [actualMileage, setActualMileage] = useState<number>(
-    Number(actualMileageMap![car_id]),
+    Number(
+      availableCarList.find((car) => car.car_id === car_id)?.actual_mileage,
+    ),
   );
   const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
     useState<boolean>(false);
@@ -75,18 +77,13 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     setMileage_before_deadline_to_remember,
   ] = useState<number>(reglament.mileage_before_deadline_to_remember);
   const [comment, setComment] = useState<string>(reglament.comment);
-  // getMyTaxiCarActualMileage(car_id).then((mileage) => {
-  //   console.log({ mileage, mileage_stamp });
-  //   setActualMileage(mileage);
-  //   console.log({ actualMileage, mileage });
-  // });
 
   const { progress, progress_color, bg_color } = useMemo(() => {
     let progress = Math.min(
       Math.floor(
         ((actualMileage! - reglament.mileage_stamp) /
           (mileage_deadline * 1000)) *
-          100,
+        100,
       ),
       100,
     );
@@ -97,7 +94,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     const notify_marker = Math.floor(
       ((mileage_deadline - mileage_before_deadline_to_remember) /
         mileage_deadline) *
-        100,
+      100,
     );
     let progress_color;
     let bg_color;
@@ -229,6 +226,10 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           ) : (
             <Label>{reglament_type_name}</Label>
           )}
+          <Label>{sharedI18n.autoPark}:</Label>
+          <Label>{autoParks.find((autoPark) => autoPark.id === reglament?.auto_park_id)?.name}</Label>
+          <Label>{sharedI18n.mileage}(KM):</Label>
+          <Label>{Math.floor(actualMileage / 1000)}</Label>
           <Label>{sharedI18n.notifyAfter} (KM):</Label>
           {isEditingModeTurnedOn ? (
             <Input
