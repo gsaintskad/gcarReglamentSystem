@@ -42,7 +42,8 @@ if (ENV === "TEST" || ENV === "DEV") {
 } else {
   connectionString = `postgres://${PG_USER}:${PG_PASSWORD}@${PROXY_HOST}:${numericProxyPort}/${PG_DB}`;
 }
-
+console.log(`Debug: The value of MY_TAXI_PROXY_PORT is "${PROXY_PORT}"`);
+// ...
 export const myTaxiPool = new pg.Pool({
   connectionString: connectionString,
 });

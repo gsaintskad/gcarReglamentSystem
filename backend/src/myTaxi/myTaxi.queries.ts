@@ -59,3 +59,18 @@ export const getAllAutoParks = async () => {
   const { rows, rowCount } = result;
   return { rows };
 };
+export const getActualMyTaxiCarList = async (last_actualization: Date) => {
+  const sqlFilePath = join(
+    process.cwd(),
+    "src",
+    "myTaxi",
+    "sql",
+    "getActualCarList.sql",
+  );
+
+  const sql = fs.readFileSync(sqlFilePath).toString()
+
+  const result = await myTaxiPool.query(sql, [last_actualization]);
+  const { rows, rowCount } = result;
+  return { rows };
+};

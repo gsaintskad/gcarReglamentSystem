@@ -19,7 +19,8 @@
     "migrate:up": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:up",
     "migrate:down": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts migrate:down",
     "seed:make": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:make",
-    "seed:run": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:run"
+    "seed:run": "node --no-warnings --loader ts-node/esm node_modules/knex/bin/cli.js --knexfile knexfile.ts seed:run",
+    "testActualizeCarListManually":"ENV=TEST node --no-warnings --loader ts-node/esm src/reglaments/modules/actualize-car-list.ts"
   },
   "dependencies": {
     "@types/cron": "^2.0.1",
