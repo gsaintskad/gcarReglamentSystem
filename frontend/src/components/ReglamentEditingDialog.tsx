@@ -74,10 +74,11 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   // });
 
   const { progress, progress_color, bg_color } = useMemo(() => {
-    let progress = Math.floor(
+    let progress = Math.min(Math.floor(
       ((actualMileage! - reglament.mileage_stamp) / (mileage_deadline * 1000)) *
       100
-    );
+    ), 100)
+
     if (mileage_deadline == 0) {
       progress = 100;
     }
@@ -88,7 +89,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     );
     let progress_color;
     let bg_color;
-    if (progress >= 100) {
+    if (progress === 100) {
       progress_color = reglamentStateColors.expired;
       bg_color = reglamentStateBgColors.expired;
     } else if (progress >= notify_marker) {
@@ -127,7 +128,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   }, [reglament_type_id, types]);
   const mileageLeftOver = useMemo(() => {
     if (!actualMileage || !mileage_deadline) return 0;
-    return mileage_deadline - Math.floor((actualMileage - reglament.mileage_stamp)/100) / 10;
+    return Math.floor(mileage_deadline - (actualMileage - reglament.mileage_stamp) / 1000);
   }, [actualMileage, mileage_deadline]);
   // console.log({ reglament, progress, progress_color, bg_color });
   return actualMileage ? (
