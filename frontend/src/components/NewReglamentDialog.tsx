@@ -47,29 +47,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
 }
@@ -88,7 +65,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const [comment, setComment] = useState<string>("");
 
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
+  const [selectedCar, setSelectedCar] = useState<reglamentTypes.AvailableCar | undefined>()
 
 
   const is_car_found = useMemo<Boolean>(() => {
@@ -128,7 +105,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     car,
   ]);
   const { globalState } = useMainContext();
-  const { reglamentTypes: types, i18n } = globalState;
+  const { reglamentTypes: types, i18n, availableCarList } = globalState;
   const {
     buttons: buttonsI18n,
     shared: sharedI18n,
@@ -163,9 +140,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 aria-expanded={open}
                 className="w-[200px] justify-between"
               >
-                {value
-                  ? frameworks.find((framework) => framework.value === value)?.label
-                  : "Select framework..."}
+                {selectedCar
+                  ? availableCarList.find((car) => car.car_id === selectedCar?.car_id)?.license_plate
+                  : "Select car..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -174,24 +151,24 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 <CommandInput placeholder="Search framework..." />
                 <CommandEmpty>No framework found.</CommandEmpty>
                 <CommandGroup>
-                  {frameworks.map((framework) => (
+                  {availableCarList.map((car) => (
                     <CommandItem
-                      key={framework.value}
+                      key={`creation-${car.car_id}`}
 
                       onSelect={
-                        //@ts-ignore
+
                         (currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue)
+                          setSelectedCar(availableCarList.find((car) => car.car_id === currentValue))
                           setOpen(false)
                         }}
                     >
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          value === framework.value ? "opacity-100" : "opacity-0"
+                          selectedCar?.car_id === car.car_id ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {framework.label}
+                      {car.license_plate}
                     </CommandItem>
                   ))}
                 </CommandGroup>
