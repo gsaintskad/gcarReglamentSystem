@@ -18,13 +18,12 @@ export interface carReglamentDto {
   comment: string;
   mileage_stamp: number;
 }
-export interface AvailableCar{
-  car_id:string,
-  license_plate:string,
-  actual_mileage:number,
-  last_actualization:Date,
-  auto_park_id:string,
-
+export interface AvailableCar {
+  car_id: string;
+  license_plate: string;
+  actual_mileage: number;
+  last_actualization: Date;
+  auto_park_id: string;
 }
 export interface reglamentType {
   id: number;

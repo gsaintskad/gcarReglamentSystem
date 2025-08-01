@@ -1,6 +1,10 @@
 // frontend/src/contexts/MainContext.tsx
 import api from "@/api/reglamentSystem.api";
-import { AvailableCar, carReglamentDto, reglamentType } from "@/types/reglament.types";
+import {
+  AvailableCar,
+  carReglamentDto,
+  reglamentType,
+} from "@/types/reglament.types";
 import React, {
   createContext,
   useState,
@@ -8,7 +12,11 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { getAvailableCarList, getCarReglaments, getReglamentTypes } from "@/utils/reglament.utils";
+import {
+  getAvailableCarList,
+  getCarReglaments,
+  getReglamentTypes,
+} from "@/utils/reglament.utils";
 import {
   getMyTaxiCarActualMileage,
   getMyTaxiCarActualMileages,
@@ -43,7 +51,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     reglamentTypes: undefined,
     i18n: languages.en,
     chosenLanguage: "en",
-    availableCarList:[]
+    availableCarList: [],
   });
 
   useEffect(() => {
@@ -58,14 +66,14 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       }, new Set<string>());
       const actualMileageMap: { [key: string]: string } =
         await getMyTaxiCarActualMileages(Array.from(uniqueCars));
-      const availableCarList= await getAvailableCarList();
-      console.log(availableCarList)
+      const availableCarList = await getAvailableCarList();
+      console.log(availableCarList);
       setGlobalState({
         ...structuredClone(globalState),
         reglaments,
         reglamentTypes,
         actualMileageMap,
-        availableCarList
+        availableCarList,
       });
     }
     fetchCarsAndReglamentTypes();

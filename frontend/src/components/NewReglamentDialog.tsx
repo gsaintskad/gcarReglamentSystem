@@ -38,7 +38,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
 }
@@ -49,14 +48,19 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   // State for form fields
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
-  const [mileage_before_deadline_to_remember, setMileage_before_deadline_to_remember] = useState<number>();
+  const [
+    mileage_before_deadline_to_remember,
+    setMileage_before_deadline_to_remember,
+  ] = useState<number>();
   const [comment, setComment] = useState<string>("");
 
   // State for the Combobox Popover
   const [open, setOpen] = useState(false);
 
   // State for the selected car from the Combobox
-  const [selectedCar, setSelectedCar] = useState<reglamentTypes.AvailableCar | undefined>();
+  const [selectedCar, setSelectedCar] = useState<
+    reglamentTypes.AvailableCar | undefined
+  >();
 
   // Get global state from the context
   const { globalState } = useMainContext();
@@ -155,9 +159,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 aria-expanded={open}
                 className="w-full justify-between"
               >
-                {selectedCar
-                  ? selectedCar.license_plate
-                  : "Select car..."}
+                {selectedCar ? selectedCar.license_plate : "Select car..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -171,7 +173,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                       key={`creation-${car.car_id}`}
                       onSelect={(currentLicensePlate) => {
                         const newCar = availableCarList.find(
-                          (c) => c.license_plate.toLowerCase() === currentLicensePlate.toLowerCase()
+                          (c) =>
+                            c.license_plate.toLowerCase() ===
+                            currentLicensePlate.toLowerCase(),
                         );
                         setSelectedCar(newCar);
                         setOpen(false);
@@ -181,7 +185,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          selectedCar?.car_id === car.car_id ? "opacity-100" : "opacity-0"
+                          selectedCar?.car_id === car.car_id
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
                       {car.license_plate}

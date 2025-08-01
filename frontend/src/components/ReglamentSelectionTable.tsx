@@ -31,7 +31,7 @@ import { carReglamentDto } from "@/types/reglament.types";
 import ReglamentEditingDialog from "./ReglamentEditingDialog";
 import useMainContext from "@/contexts/MainContext";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
-interface ReglamentSelectionTableProps { }
+interface ReglamentSelectionTableProps {}
 
 const ReglamentSelectionTable: React.FC<ReglamentSelectionTableProps> = (
   props: ReglamentSelectionTableProps,

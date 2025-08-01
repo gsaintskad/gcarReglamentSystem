@@ -89,11 +89,15 @@ export const markCarReglamentAsIncactiveEndpoint = async (
     res.status(500).json({ message: "An unexpected error occurred" });
   }
 };
-export const getAvailableCarListEndpoint = async (req: Request, res: Response) => {
+export const getAvailableCarListEndpoint = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     devLog("getting available car list...");
-    const { availableCars } = await reglamentService.getAvailableCarListHandler();
-    res.status(200).json({ data:availableCars });
+    const { availableCars } =
+      await reglamentService.getAvailableCarListHandler();
+    res.status(200).json({ data: availableCars });
   } catch (error) {
     console.error("Unexpected error:", error);
     res.status(500).json({ message: "An unexpected error occurred" });
