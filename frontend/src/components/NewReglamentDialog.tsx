@@ -1,7 +1,6 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import * as reglamentTypes from "../types/reglament.types";
 import api from "@/api/reglamentSystem.api";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,22 +17,14 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getReglamentTypes } from "@/utils/reglament.utils";
 import useMainContext from "@/contexts/MainContext";
-import { Slider } from "@radix-ui/react-slider";
-import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
-import { getMyTaxiCarByLicensePlate } from "@/utils/myTaxi.utils";
-import { licensePlateCheckedCar } from "@/types/myTaxi.types";
 import { Check, ChevronsUpDown } from "lucide-react";
-
-import { cn } from "@/lib/utils"; // Utility for conditional class names
-
+import { cn } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -47,63 +38,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
 }
+
 export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   cb,
 }: NewReglamentDialogProps) => {
-  const [license_plate, setLicense_plate] = useState<string>();
-  const [car, setCar] = useState<licensePlateCheckedCar | undefined>();
+  // State for form fields
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [
-    mileage_before_deadline_to_remember,
-    setMileage_before_deadline_to_remember,
-  ] = useState<number>();
+  const [mileage_before_deadline_to_remember, setMileage_before_deadline_to_remember] = useState<number>();
   const [comment, setComment] = useState<string>("");
 
-  const [open, setOpen] = useState(false)
-  const [selectedCar, setSelectedCar] = useState<reglamentTypes.AvailableCar | undefined>()
+  // State for the Combobox Popover
+  const [open, setOpen] = useState(false);
 
+  // State for the selected car from the Combobox
+  const [selectedCar, setSelectedCar] = useState<reglamentTypes.AvailableCar | undefined>();
 
-  const is_car_found = useMemo<Boolean>(() => {
-    return !!car && license_plate == car!.license_plate;
-  }, [license_plate, car]);
-  const createReglament = useCallback(async () => {
-    const body = {
-      reglament_type_id: String(reglament_type_id),
-      car_id: String(car!.car_id),
-      license_plate: String(car!.license_plate),
-      auto_park_id: String(car!.auto_park_id),
-      mileage_deadline,
-      mileage_before_deadline_to_remember,
-      telegram_id: 12345,
-      comment,
-      mileage_stamp: car!.actual_mileage,
-    } as {
-      reglament_type_id: string;
-      car_id: string;
-      license_plate: string;
-      auto_park_id: string;
-      mileage_deadline: number;
-      mileage_before_deadline_to_remember: number;
-      telegram_id: number;
-      comment: string;
-      mileage_stamp: number;
-    };
-    const response = await api.post("/reglaments/cars", body);
-    await cb();
-    return;
-  }, [
-    reglament_type_id,
-    mileage_deadline,
-    mileage_before_deadline_to_remember,
-    comment,
-    license_plate,
-    car,
-  ]);
+  // Get global state from the context
   const { globalState } = useMainContext();
   const { reglamentTypes: types, i18n, availableCarList } = globalState;
   const {
@@ -112,14 +67,73 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     newReglament: newReglamentI18n,
     placeHolders: placeHoldersI18n,
   } = i18n!;
-  const getAndSaveCarbyLicencePlate = useCallback(
-    async (license_plate: string) => {
-      const car = await getMyTaxiCarByLicensePlate(license_plate);
-      car.actual_mileage = Number(car.actual_mileage);
-      setCar(car as licensePlateCheckedCar);
-    },
-    [license_plate],
-  );
+
+  /**
+   * Checks if a car has been selected. This is used to enable/disable
+   * the other form fields.
+   */
+  const isCarSelected = useMemo<boolean>(() => {
+    return !!selectedCar;
+  }, [selectedCar]);
+
+  /**
+   * Creates a new reglament with the selected car and form data.
+   * The `car` state is now replaced by `selectedCar`.
+   */
+  const createReglament = useCallback(async () => {
+    if (!selectedCar) {
+      console.error("No car selected. Cannot create reglament.");
+      return;
+    }
+
+    const body = {
+      reglament_type_id: String(reglament_type_id),
+      car_id: String(selectedCar.car_id),
+      license_plate: String(selectedCar.license_plate),
+      auto_park_id: String(selectedCar.auto_park_id),
+      mileage_deadline,
+      mileage_before_deadline_to_remember,
+      telegram_id: 12345, // Placeholder telegram ID
+      comment,
+      mileage_stamp: selectedCar.actual_mileage,
+    } as {
+      reglament_type_id: string;
+      car_id: string;
+      license_plate: string;
+      auto_park_id: string;
+      mileage_deadline: number | undefined;
+      mileage_before_deadline_to_remember: number | undefined;
+      telegram_id: number;
+      comment: string;
+      mileage_stamp: number;
+    };
+    try {
+      const response = await api.post("/reglaments/cars", body);
+      await cb();
+    } catch (error) {
+      console.error("Failed to create reglament:", error);
+    }
+  }, [
+    reglament_type_id,
+    mileage_deadline,
+    mileage_before_deadline_to_remember,
+    comment,
+    selectedCar,
+    cb,
+  ]);
+
+  /**
+   * Resets all the form fields and closes the dialog.
+   * This function is now responsible for clearing the `selectedCar` state.
+   */
+  const handleResetForm = () => {
+    setSelectedCar(undefined);
+    setReglament_type_id(undefined);
+    setMileage_deadline(undefined);
+    setMileage_before_deadline_to_remember(undefined);
+    setComment("");
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -130,37 +144,39 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           <DialogTitle>{newReglamentI18n.title}</DialogTitle>
           <DialogDescription>{newReglamentI18n.description}</DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-2 ">
+        <div className="grid grid-cols-2 gap-4">
           <Label>{sharedI18n.licensePlate}: </Label>
+          {/* Combobox for searching and selecting a car by license plate */}
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-[200px] justify-between"
+                className="w-full justify-between"
               >
                 {selectedCar
-                  ? availableCarList.find((car) => car.car_id === selectedCar?.car_id)?.license_plate
+                  ? selectedCar.license_plate
                   : "Select car..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[calc(100%-1rem)] p-0">
               <Command>
-                <CommandInput placeholder="Search framework..." />
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandInput placeholder="Search car..." />
+                <CommandEmpty>No car found.</CommandEmpty>
                 <CommandGroup>
                   {availableCarList.map((car) => (
                     <CommandItem
                       key={`creation-${car.car_id}`}
-
-                      onSelect={
-
-                        (currentValue) => {
-                          setSelectedCar(availableCarList.find((car) => car.car_id === currentValue))
-                          setOpen(false)
-                        }}
+                      onSelect={(currentLicensePlate) => {
+                        const newCar = availableCarList.find(
+                          (c) => c.license_plate.toLowerCase() === currentLicensePlate.toLowerCase()
+                        );
+                        setSelectedCar(newCar);
+                        setOpen(false);
+                      }}
+                      value={car.license_plate}
                     >
                       <Check
                         className={cn(
@@ -175,12 +191,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               </Command>
             </PopoverContent>
           </Popover>
+
           <Label>{sharedI18n.reglamentType}:</Label>
           <Select
             onValueChange={(val: string) => setReglament_type_id(Number(val))}
-            disabled={!is_car_found}
+            disabled={!isCarSelected}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
@@ -199,14 +216,14 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
 
           <Label>{sharedI18n.notifyAfter}(KM): </Label>
           <Input
-            disabled={!is_car_found}
+            disabled={!isCarSelected}
             onChange={(e) => setMileage_deadline(Number(e.target.value))}
             placeholder="15000"
           ></Input>
 
           <Label>{sharedI18n.notifyBeforeCompletion}(KM):</Label>
           <Input
-            disabled={!is_car_found}
+            disabled={!isCarSelected}
             onChange={(e) =>
               setMileage_before_deadline_to_remember(Number(e.target.value))
             }
@@ -214,7 +231,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           ></Input>
           <Label>{sharedI18n.comment}:</Label>
           <Input
-            disabled={!is_car_found}
+            disabled={!isCarSelected}
             onChange={(e) => setComment(String(e.target.value))}
             placeholder={placeHoldersI18n.commentInput}
           ></Input>
@@ -226,14 +243,10 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
               type="submit"
               onClick={() => {
                 createReglament();
-                setCar(undefined);
-                setLicense_plate(undefined);
-                setReglament_type_id(undefined);
-                setMileage_deadline(undefined);
-                setMileage_before_deadline_to_remember(undefined);
-                setComment("");
+                handleResetForm();
                 cb();
               }}
+              disabled={!isCarSelected}
             >
               {buttonsI18n.create}
             </Button>
