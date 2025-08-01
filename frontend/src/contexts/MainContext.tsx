@@ -10,13 +10,14 @@ import React, {
 } from "react";
 import { getCarReglaments, getReglamentTypes } from "@/utils/reglament.utils";
 import { getMyTaxiCarActualMileage, getMyTaxiCarActualMileages } from "@/utils/myTaxi.utils";
-import { i18nLanguageType } from "@/i18n";
+import { i18nLanguageType, maintainedLanguages } from "@/i18n";
 import * as languages from "@/i18n";
 interface GlobalState {
   reglaments: carReglamentDto[] | undefined;
   reglamentTypes: reglamentType[] | undefined;
   actualMileageMap: { [key: string]: string } | undefined;
   i18n: i18nLanguageType | undefined;
+  chosenLanguage: maintainedLanguages | undefined;
 }
 
 interface MainContextType {
@@ -36,7 +37,8 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     reglaments: undefined,
     actualMileageMap: undefined,
     reglamentTypes: undefined,
-    i18n: undefined,
+    i18n: languages.en,
+    chosenLanguage: 'en',
   });
 
   useEffect(() => {
@@ -50,12 +52,17 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
         return acc;
       }, new Set<string>())
       const actualMileageMap: { [key: string]: string } = await getMyTaxiCarActualMileages(Array.from(uniqueCars))
-      console.log(actualMileageMap);
-      const i18n = languages.uk
-      setGlobalState({ reglaments, reglamentTypes, actualMileageMap, i18n });
+
+      setGlobalState({ ...structuredClone(globalState), reglaments, reglamentTypes, actualMileageMap, });
     }
     fetchCarsAndReglamentTypes();
   }, []);
+  useEffect(() => {
+    const i18n: i18nLanguageType = languages[globalState.chosenLanguage!]
+    console.log(i18n);
+    setGlobalState({ ...structuredClone(globalState), i18n, chosenLanguage: globalState.chosenLanguage });
+    console.log(globalState);
+  }, [globalState.chosenLanguage]);
   const contextValue: MainContextType = {
     globalState,
     setGlobalState,

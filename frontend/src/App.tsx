@@ -16,11 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { maintainedLanguages } from "./i18n";
 
 function App() {
-  const { globalState } = useMainContext();
-  const [language, setLanguage] = useState("en"); // Initialized to 'en'
+  const { globalState, setGlobalState } = useMainContext();
+  const [language, setLanguage] = useState<maintainedLanguages>("en"); // Initialized to 'en'
 
+  useEffect(() => {
+    console.log({ language });
+    setGlobalState({ ...globalState, chosenLanguage: language });
+  }, [language])
   const UKRAINE_FLAG_URL = 'https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg';
   const UK_FLAG_URL = 'https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg';
 
@@ -30,12 +35,12 @@ function App() {
   const selectFixedTriggerWidth = "w-[80px]"; // Example: making it much narrower. Adjust as needed.
 
   return (
-    <div className="flex flex-col  items-center py-10 mx-3 h-screen w-full max-sm:max-w-sm  ">
+    <div className="flex flex-col  items-center py-10 h-screen w-full max-sm:max-w-sm  max-sm:translate-x-1 ">
       <div className="md:w-2/3">
         <div className="flex justify-between   items-center">
           <Label> WELCOME TO GCAR REGLAMENT SYSTEM 😎</Label>
           <Select
-            onValueChange={(val: string) => setLanguage(val)}
+            onValueChange={(val: maintainedLanguages) => setLanguage(val)}
             value={language}
           >
             {/* Apply the fixed width to SelectTrigger */}

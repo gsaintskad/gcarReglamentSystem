@@ -98,7 +98,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
       <DialogTrigger asChild>
         <Button className="w-1/2">{buttonsI18n.newReglament}</Button>
       </DialogTrigger>
-      <DialogContent className="h-3/4">
+      <DialogContent className="h-3/4 max-sm:max-w-sm ">
         <DialogHeader>
           <DialogTitle>{newReglamentI18n.title}</DialogTitle>
           <DialogDescription>

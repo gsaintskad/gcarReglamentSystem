@@ -145,7 +145,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
           </TableCell>
         </TableRow>
       </DialogTrigger>
-      <DialogContent className="h-3/4">
+      <DialogContent className="h-3/4 max-sm:max-w-sm ">
         <DialogHeader>
           <DialogTitle>
             {sharedI18n.reglament} {license_plate} #{reglament.id!}

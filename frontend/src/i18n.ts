@@ -1,3 +1,5 @@
+export type maintainedLanguages= 'en' | 'ua'
+
 export const en = {
     shared: {
         searchBy: 'Serach by',
@@ -36,7 +38,7 @@ export const en = {
     }
 }
 export type i18nLanguageType = typeof en;
-export const uk:i18nLanguageType = {
+export const ua:i18nLanguageType = {
     shared: {
         searchBy: 'Шукати за',
         reglamentType: 'Тип регламенту',
