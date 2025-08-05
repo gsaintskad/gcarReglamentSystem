@@ -30,7 +30,7 @@ interface GlobalState {
   reglamentTypes: reglamentType[] | undefined;
   i18n: i18nLanguageType | undefined;
   chosenLanguage: maintainedLanguages | undefined;
-  actualMileageMap: { [key: string]: number } ;
+  actualMileageMap: { [key: string]: number };
 
   autoParks: AutoPark[];
 }
@@ -76,7 +76,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
         reglaments,
         reglamentTypes,
         autoParks,
-        actualMileageMap
+        actualMileageMap,
       });
     }
     fetchCarsAndReglamentTypes();

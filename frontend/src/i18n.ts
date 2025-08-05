@@ -13,7 +13,7 @@ export const en = {
     licensePlate: "License plate",
     reglament: "Reglament",
     autoPark: "Auto park",
-    mileage:'Mileage'
+    mileage: "Mileage",
   },
   newReglament: {
     createReglament: "Create Reglament",
@@ -55,7 +55,7 @@ export const ua: i18nLanguageType = {
     licensePlate: "Номерний знак",
     reglament: "Регламент",
     autoPark: "Автопарк",
-    mileage:'Пробіг'
+    mileage: "Пробіг",
   },
   newReglament: {
     createReglament: "Створити регламент",

@@ -54,7 +54,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   cb,
 }: NewReglamentDialogProps) => {
   // State for form fields
-  const [availableCarList, setAvailableCarList] = useState<reglamentTypes.AvailableCar[]>([]);
+  const [availableCarList, setAvailableCarList] = useState<
+    reglamentTypes.AvailableCar[]
+  >([]);
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
   const [
@@ -71,8 +73,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const [selectedCar, setSelectedCar] = useState<
     reglamentTypes.AvailableCar | undefined
   >();
-  const [areCarsFetched, setAreCarsFetched] = useState<boolean>(false)
-
+  const [areCarsFetched, setAreCarsFetched] = useState<boolean>(false);
 
   // Get global state from the context
   const { globalState } = useMainContext();
@@ -94,23 +95,21 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
 
   useEffect(() => {
     if (areCarsFetched && searchTerm.length <= 3) {
-      console.log('not requesting ', searchTerm)
-      setAvailableCarList([])
-      setAreCarsFetched(false)
-      return
+      console.log("not requesting ", searchTerm);
+      setAvailableCarList([]);
+      setAreCarsFetched(false);
+      return;
     }
     if (searchTerm.length >= 3 && !areCarsFetched) {
-      console.log('requesting ', searchTerm)
+      console.log("requesting ", searchTerm);
       async function fetchCars() {
         const availableCarList = await getAvailableCarList(searchTerm);
-        setAvailableCarList(availableCarList)
-        setAreCarsFetched(true)
+        setAvailableCarList(availableCarList);
+        setAreCarsFetched(true);
       }
-      fetchCars()
+      fetchCars();
     }
-
-  }, [searchTerm])
-
+  }, [searchTerm]);
 
   /**
    * Creates a new reglament with the selected car and form data.
@@ -259,7 +258,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           {isCarSelected && (
             <>
               <Label>{sharedI18n.autoPark}:</Label>
-              <Label>{autoParks.find((autoPark) => autoPark.id === selectedCar?.auto_park_id)?.name}</Label>
+              <Label>
+                {
+                  autoParks.find(
+                    (autoPark) => autoPark.id === selectedCar?.auto_park_id,
+                  )?.name
+                }
+              </Label>
               <Label>{sharedI18n.mileage}(KM):</Label>
               <Label>{Math.floor(selectedCar!.actual_mileage / 1000)}</Label>
             </>
