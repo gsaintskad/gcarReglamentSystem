@@ -79,8 +79,5 @@ export const getMyTaxiAutoParksEndpoint = async (
     devLog("Getting auto parks...");
     const autoParks = await myTaxiService.getMyTaxiAutoParksHandler();
     res.status(200).json({ data: autoParks });
-  }
-  catch (error) {
-
-  }
-}
+  } catch (error) {}
+};

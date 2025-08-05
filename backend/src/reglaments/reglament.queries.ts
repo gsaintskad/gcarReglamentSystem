@@ -136,9 +136,9 @@ export const getLastCarAcutalization = async (): Promise<Date | null> => {
   const { max: last_actualization } = row;
   return last_actualization;
 };
-export const getAvailableCarListByLicensePlate = async (searchTerm: string): Promise<
-  reglamentTypes.AvailableCar[]
-> => {
+export const getAvailableCarListByLicensePlate = async (
+  searchTerm: string,
+): Promise<reglamentTypes.AvailableCar[]> => {
   const licensePlateProto = `%${searchTerm}%`;
 
   const sql = /*sql*/ `
@@ -149,12 +149,12 @@ export const getAvailableCarListByLicensePlate = async (searchTerm: string): Pro
   const { rows } = await reglamentPool.query(sql, [licensePlateProto]);
   return rows as reglamentTypes.AvailableCar[];
 };
-export const getCarMileagesByCarIds = async (carIds: string[]): Promise<
-  { car_id: string, actual_mileage: number }[]
-> => {
+export const getCarMileagesByCarIds = async (
+  carIds: string[],
+): Promise<{ car_id: string; actual_mileage: number }[]> => {
   const sql = /*sql*/ `
     SELECT cars.car_id, cars.actual_mileag FROM cars where cars.car_id = ANY($1)
     `;
   const { rows } = await reglamentPool.query(sql, [carIds]);
-  return rows as { car_id: string, actual_mileage: number }[];
+  return rows as { car_id: string; actual_mileage: number }[];
 };
