@@ -30,6 +30,7 @@ interface GlobalState {
   reglamentTypes: reglamentType[] | undefined;
   i18n: i18nLanguageType | undefined;
   chosenLanguage: maintainedLanguages | undefined;
+  actualMileageMap: { [key: string]: number } ;
 
   autoParks: AutoPark[];
 }
@@ -52,7 +53,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     reglamentTypes: undefined,
     i18n: languages.en,
     chosenLanguage: "en",
-
+    actualMileageMap: {},
     autoParks: [],
   });
 
@@ -66,7 +67,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
         acc.add(reglament.car_id);
         return acc;
       }, new Set<string>());
-      const actualMileageMap: { [key: string]: string } =
+      const actualMileageMap: { [key: string]: number } =
         await getMyTaxiCarActualMileages(Array.from(uniqueCars));
       const autoParks = await getAutoParks();
 
@@ -75,6 +76,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
         reglaments,
         reglamentTypes,
         autoParks,
+        actualMileageMap
       });
     }
     fetchCarsAndReglamentTypes();
