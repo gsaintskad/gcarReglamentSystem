@@ -1,4 +1,5 @@
 import * as myTaxiRepo from "../myTaxi.queries.js";
+import * as reglamentsRepo from '../../reglaments/reglament.queries.js'
 import * as myTaxiTypes from "../myTaxi.types.js";
 // export const getCars = async () => {
 //   const { rows: cars }: { rows: myTaxiTypes.getCarsJson[] } =

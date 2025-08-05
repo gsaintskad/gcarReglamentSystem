@@ -36,6 +36,6 @@ export const markCarReglamentAsIncactiveHandler = async (
   return true;
 };
 export const getAvailableCarListHandler = async () => {
-  const availableCars = await reglamentRepo.getAvailableCarList();
+  const availableCars = await reglamentRepo.getAvailableCarListByLicensePlate();
   return { availableCars };
 };

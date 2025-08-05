@@ -30,7 +30,7 @@ interface GlobalState {
   reglamentTypes: reglamentType[] | undefined;
   i18n: i18nLanguageType | undefined;
   chosenLanguage: maintainedLanguages | undefined;
-  availableCarList: AvailableCar[];
+
   autoParks: AutoPark[];
 }
 
@@ -52,7 +52,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     reglamentTypes: undefined,
     i18n: languages.en,
     chosenLanguage: "en",
-    availableCarList: [],
+
     autoParks: [],
   });
 
@@ -68,14 +68,12 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       }, new Set<string>());
       const actualMileageMap: { [key: string]: string } =
         await getMyTaxiCarActualMileages(Array.from(uniqueCars));
-      const availableCarList = await getAvailableCarList();
       const autoParks = await getAutoParks();
 
       setGlobalState({
         ...structuredClone(globalState),
         reglaments,
         reglamentTypes,
-        availableCarList,
         autoParks,
       });
     }

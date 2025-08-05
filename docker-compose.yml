@@ -14,8 +14,8 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - frontend
-      - app
+      # - frontend
+      # - app
       - db
     restart: always
     
@@ -40,26 +40,26 @@ services:
       timeout: 5s
       retries: 5
 
-  app: # Your application service (e.g., Node.js with Knex)
-    build: ./backend # Or image: your_app_image
-    restart: always
-    ports:
-      - "${PORT}:${PORT}" # Maps host_port:container_port
-    networks:
-      - m_net    
-      # Pass the entire backend/.env file to the app container
-    env_file:
-      - ./backend/.env # Pointing to the .env file within the backend directory
-    depends_on:
-      db:
-        condition: service_healthy # Ensure app starts only after db is healthy
-  frontend:
-    build: ./frontend
-    restart: always
-    depends_on:
-      - app # Changed from 'app:' to '- app' to fix the mapping error
-    networks:
-      - m_net
+  # app: # Your application service (e.g., Node.js with Knex)
+  #   build: ./backend # Or image: your_app_image
+  #   restart: always
+  #   ports:
+  #     - "${PORT}:${PORT}" # Maps host_port:container_port
+  #   networks:
+  #     - m_net    
+  #     # Pass the entire backend/.env file to the app container
+  #   env_file:
+  #     - ./backend/.env # Pointing to the .env file within the backend directory
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy # Ensure app starts only after db is healthy
+  # frontend:
+  #   build: ./frontend
+  #   restart: always
+  #   depends_on:
+  #     - app # Changed from 'app:' to '- app' to fix the mapping error
+  #   networks:
+  #     - m_net
   
 volumes:
   db_data:
