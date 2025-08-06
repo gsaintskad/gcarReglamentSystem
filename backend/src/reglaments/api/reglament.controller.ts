@@ -47,7 +47,6 @@ export const createCarReglamentEndpoint = async (
 export const getCarReglamentsEndpoint = async (req: Request, res: Response) => {
   try {
     devLog("getting car reglaments...");
-
     const { carReglaments } = await reglamentService.getCarReglamentsHandler();
     res.status(200).json({ carReglaments });
   } catch (error) {
@@ -95,8 +94,10 @@ export const getAvailableCarListEndpoint = async (
 ) => {
   try {
     devLog("getting available car list...");
+    const { search: searchTerm } = req.query;
+
     const { availableCars } =
-      await reglamentService.getAvailableCarListHandler();
+      await reglamentService.getAvailableCarListHandler(searchTerm as string);
     res.status(200).json({ data: availableCars });
   } catch (error) {
     console.error("Unexpected error:", error);

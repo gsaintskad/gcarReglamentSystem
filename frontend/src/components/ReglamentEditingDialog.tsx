@@ -51,7 +51,12 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const { reglament } = props;
 
   const { globalState } = useMainContext();
-  const { reglamentTypes: types, i18n, availableCarList, autoParks } = globalState;
+  const {
+    reglamentTypes: types,
+    i18n,
+    actualMileageMap,
+    autoParks,
+  } = globalState;
   const {
     shared: sharedI18n,
     buttons: buttonsI18n,
@@ -67,7 +72,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   );
   const [actualMileage, setActualMileage] = useState<number>(
     Number(
-      availableCarList.find((car) => car.car_id === car_id)?.actual_mileage,
+      actualMileageMap[car_id]
     ),
   );
   const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
@@ -227,7 +232,13 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
             <Label>{reglament_type_name}</Label>
           )}
           <Label>{sharedI18n.autoPark}:</Label>
-          <Label>{autoParks.find((autoPark) => autoPark.id === reglament?.auto_park_id)?.name}</Label>
+          <Label>
+            {
+              autoParks.find(
+                (autoPark) => autoPark.id === reglament?.auto_park_id,
+              )?.name
+            }
+          </Label>
           <Label>{sharedI18n.mileage}(KM):</Label>
           <Label>{Math.floor(actualMileage / 1000)}</Label>
           <Label>{sharedI18n.notifyAfter} (KM):</Label>

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import * as reglamentTypes from "../types/reglament.types";
 import api from "@/api/reglamentSystem.api";
 import { Button } from "@/components/ui/button";
@@ -38,19 +38,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { convertCyrillicToLatinLicensePlate } from "@/utils/shared.utils";
+import { getAvailableCarList } from "@/utils/reglament.utils";
 
 /**
  * Interface for the available car data.
  * This is used to define the structure of the objects
  * in the availableCarList.
  */
-export interface AvailableCar {
-  car_id: string;
-  license_plate: string;
-  actual_mileage: number;
-  last_actualization: Date;
-  auto_park_id: string;
-}
 
 interface NewReglamentDialogProps {
   cb: () => Promise<any>;
@@ -60,6 +54,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   cb,
 }: NewReglamentDialogProps) => {
   // State for form fields
+  const [availableCarList, setAvailableCarList] = useState<
+    reglamentTypes.AvailableCar[]
+  >([]);
   const [reglament_type_id, setReglament_type_id] = useState<number>();
   const [mileage_deadline, setMileage_deadline] = useState<number>();
   const [
@@ -76,10 +73,11 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const [selectedCar, setSelectedCar] = useState<
     reglamentTypes.AvailableCar | undefined
   >();
+  const [areCarsFetched, setAreCarsFetched] = useState<boolean>(false);
 
   // Get global state from the context
   const { globalState } = useMainContext();
-  const { reglamentTypes: types, i18n, availableCarList, autoParks } = globalState;
+  const { reglamentTypes: types, i18n, autoParks } = globalState;
   const {
     buttons: buttonsI18n,
     shared: sharedI18n,
@@ -94,6 +92,25 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
   const isCarSelected = useMemo<boolean>(() => {
     return !!selectedCar;
   }, [selectedCar]);
+
+  useEffect(() => {
+    if (areCarsFetched && searchTerm.length <= 3) {
+      console.log("not requesting ", searchTerm);
+      setAvailableCarList([]);
+      setAreCarsFetched(false);
+      return;
+    }
+    if (searchTerm.length >= 3 && !areCarsFetched) {
+      console.log("requesting ", searchTerm);
+      async function fetchCars() {
+        const carList = await getAvailableCarList(searchTerm);
+        setAvailableCarList(carList);
+        console.log(carList)
+        setAreCarsFetched(true);
+      }
+      fetchCars();
+    }
+  }, [searchTerm]);
 
   /**
    * Creates a new reglament with the selected car and form data.
@@ -145,13 +162,14 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
    * Resets all the form fields and closes the dialog.
    * This function is now responsible for clearing the `selectedCar` state.
    */
-  const handleResetForm = () => {
+  const handleResetForm: () => void = useCallback<() => void>((): void => {
     setSelectedCar(undefined);
     setReglament_type_id(undefined);
     setMileage_deadline(undefined);
     setMileage_before_deadline_to_remember(undefined);
     setComment("");
-  };
+    return;
+  }, []);
 
   /**
    * A memoized list of cars filtered by the search term.
@@ -208,7 +226,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 <CommandInput
                   placeholder="Search car..."
                   value={searchTerm}
-                  onValueChange={setSearchTerm}
+                  onValueChange={(searchTerm) => { setSearchTerm(convertCyrillicToLatinLicensePlate(searchTerm).toUpperCase()) }}
                 />
                 <CommandEmpty>No car found.</CommandEmpty>
                 <CommandGroup>
@@ -242,7 +260,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
           {isCarSelected && (
             <>
               <Label>{sharedI18n.autoPark}:</Label>
-              <Label>{autoParks.find((autoPark) => autoPark.id === selectedCar?.auto_park_id)?.name}</Label>
+              <Label>
+                {
+                  autoParks.find(
+                    (autoPark) => autoPark.id === selectedCar?.auto_park_id,
+                  )?.name
+                }
+              </Label>
               <Label>{sharedI18n.mileage}(KM):</Label>
               <Label>{Math.floor(selectedCar!.actual_mileage / 1000)}</Label>
             </>

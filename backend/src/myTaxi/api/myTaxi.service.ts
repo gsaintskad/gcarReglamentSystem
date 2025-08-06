@@ -1,4 +1,5 @@
 import * as myTaxiRepo from "../myTaxi.queries.js";
+import * as reglamentsRepo from "../../reglaments/reglament.queries.js";
 import * as myTaxiTypes from "../myTaxi.types.js";
 // export const getCars = async () => {
 //   const { rows: cars }: { rows: myTaxiTypes.getCarsJson[] } =
@@ -19,14 +20,16 @@ export const getMyTaxiCarActualMileageHandler = async (car_id: string) => {
   return car.actual_mileage;
 };
 export const getMyTaxiCarActualMileagesHandler = async (car_ids: string[]) => {
-  const { rows: actualMileages } =
-    await myTaxiRepo.getMyTaxiCarActualMileages(car_ids);
+  const actualMileages = await reglamentsRepo.getCarMileagesByCarIds(car_ids);
 
-  return actualMileages.reduce((acc, curr) => {
-    acc[curr.car_id] = curr.actual_mileage;
+  return actualMileages.reduce(
+    (acc, curr) => {
+      acc[curr.car_id] = curr.actual_mileage;
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {} as { [key: string]: number },
+  );
 };
 export const getMyTaxiAutoParksHandler = async () => {
   const { rows: autoParks } = await myTaxiRepo.getAllAutoParks();
