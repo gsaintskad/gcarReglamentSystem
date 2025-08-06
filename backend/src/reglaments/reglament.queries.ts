@@ -144,7 +144,7 @@ export const getAvailableCarListByLicensePlate = async (
   const sql = /*sql*/ `
     SELECT cars.car_id, cars.license_plate, cars.actual_mileage, cars.last_actualization, cars.auto_park_id 
       FROM cars
-      LIKE $1
+      WHERE cars.license_plate LIKE $1
     `;
   const { rows } = await reglamentPool.query(sql, [licensePlateProto]);
   return rows as reglamentTypes.AvailableCar[];
@@ -153,7 +153,7 @@ export const getCarMileagesByCarIds = async (
   carIds: string[],
 ): Promise<{ car_id: string; actual_mileage: number }[]> => {
   const sql = /*sql*/ `
-    SELECT cars.car_id, cars.actual_mileag FROM cars where cars.car_id = ANY($1)
+    SELECT cars.car_id, cars.actual_mileage FROM cars where cars.car_id = ANY($1)
     `;
   const { rows } = await reglamentPool.query(sql, [carIds]);
   return rows as { car_id: string; actual_mileage: number }[];

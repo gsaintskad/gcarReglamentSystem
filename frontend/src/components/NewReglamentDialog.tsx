@@ -103,8 +103,9 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
     if (searchTerm.length >= 3 && !areCarsFetched) {
       console.log("requesting ", searchTerm);
       async function fetchCars() {
-        const availableCarList = await getAvailableCarList(searchTerm);
-        setAvailableCarList(availableCarList);
+        const carList = await getAvailableCarList(searchTerm);
+        setAvailableCarList(carList);
+        console.log(carList)
         setAreCarsFetched(true);
       }
       fetchCars();
@@ -161,12 +162,13 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
    * Resets all the form fields and closes the dialog.
    * This function is now responsible for clearing the `selectedCar` state.
    */
-  const handleResetForm = useMemo(() => {
+  const handleResetForm: () => void = useCallback<() => void>((): void => {
     setSelectedCar(undefined);
     setReglament_type_id(undefined);
     setMileage_deadline(undefined);
     setMileage_before_deadline_to_remember(undefined);
     setComment("");
+    return;
   }, []);
 
   /**
@@ -224,11 +226,11 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                 <CommandInput
                   placeholder="Search car..."
                   value={searchTerm}
-                  onValueChange={setSearchTerm}
+                  onValueChange={(searchTerm) => { setSearchTerm(convertCyrillicToLatinLicensePlate(searchTerm).toUpperCase()) }}
                 />
                 <CommandEmpty>No car found.</CommandEmpty>
                 <CommandGroup>
-                  {/* {filteredCars.map((car) => (
+                  {filteredCars.map((car) => (
                     <CommandItem
                       key={`creation-${car.car_id}`}
                       onSelect={(value) => {
@@ -250,7 +252,7 @@ export const NewReglamentDialog: React.FC<NewReglamentDialogProps> = ({
                       />
                       {car.license_plate}
                     </CommandItem>
-                  ))} */}
+                  ))}
                 </CommandGroup>
               </Command>
             </PopoverContent>

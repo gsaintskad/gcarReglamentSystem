@@ -54,7 +54,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   const {
     reglamentTypes: types,
     i18n,
-    availableCarList,
+    actualMileageMap,
     autoParks,
   } = globalState;
   const {
@@ -72,7 +72,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
   );
   const [actualMileage, setActualMileage] = useState<number>(
     Number(
-      availableCarList.find((car) => car.car_id === car_id)?.actual_mileage,
+      actualMileageMap[car_id]
     ),
   );
   const [isEditingModeTurnedOn, setIsEditingModeTurnedOn] =
@@ -88,7 +88,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
       Math.floor(
         ((actualMileage! - reglament.mileage_stamp) /
           (mileage_deadline * 1000)) *
-          100,
+        100,
       ),
       100,
     );
@@ -99,7 +99,7 @@ const ReglamentEditingDialog: React.FC<ReglamentEditingDialogProps> = (
     const notify_marker = Math.floor(
       ((mileage_deadline - mileage_before_deadline_to_remember) /
         mileage_deadline) *
-        100,
+      100,
     );
     let progress_color;
     let bg_color;
